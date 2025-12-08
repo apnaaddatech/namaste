@@ -32,7 +32,6 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
         @keyframes slideInUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .animate-entry { animation: fadeIn 0.5s ease-out forwards; }
         .slide-right { animation: slideInRight 0.3s ease-out forwards; }
@@ -85,7 +84,7 @@
         .feature-card { background: var(--card-bg); padding: 15px; border-radius: 15px; margin-bottom: 15px; text-align: left; border-left: 4px solid var(--primary); }
         .feature-card h3 { color: var(--primary); font-size: 1.1rem; margin-bottom: 5px; }
         .feature-card p { font-size: 0.85rem; color: var(--text-sec); line-height: 1.4; }
-        .feature-card a { color: var(--primary); }
+        .feature-card a { color: var(--primary); text-decoration: underline; }
 
         .about-section { margin-top: 30px; text-align: left; background: #1a1a1a; padding: 20px; border-radius: 15px; margin-bottom: 80px;}
         .about-section h2 { color: var(--primary); margin-bottom: 10px; }
@@ -163,13 +162,6 @@
         }
         .chat-input { flex: 1; background: #222; border: none; border-radius: 20px; color: white; padding: 10px 15px; margin: 0; }
         .chat-action-btn { color: var(--primary); font-size: 1.4rem; padding: 8px; cursor: pointer; transition: 0.2s; }
-        .recording-active { color: var(--danger); transform: scale(1.2); }
-
-        /* Loader */
-        .media-loader {
-            border: 3px solid #333; border-top: 3px solid var(--primary); border-radius: 50%;
-            width: 25px; height: 25px; animation: spin 0.8s linear infinite; display: none;
-        }
 
         /* 5. Profile Preview & Admin */
         .profile-view-modal {
@@ -224,23 +216,28 @@
         <button id="get-started-btn" class="btn-primary" onclick="handleGetStarted()">Get Started</button>
 
         <div style="margin-top: 30px;">
-            <!-- New Feature Card for Verification -->
+            <!-- Verification Card -->
             <div class="feature-card" style="border-left-color: var(--insta-blue);">
                 <h3 style="color: var(--insta-blue);">Get Verified!</h3>
                 <p>Users who join both our <a href="https://t.me/apnaadda_official" target="_blank">Telegram</a> and <a href="https://whatsapp.com/channel/0029Vb7K9Ms3gvWeXnfpLy3x" target="_blank">WhatsApp</a> channels can get the Blue Tick verified badge.</p>
             </div>
 
+            <!-- Encryption Card -->
             <div class="feature-card">
                 <h3>End-to-end encrypted</h3>
                 <p>100% private & secure environment. Your messages are protected.</p>
             </div>
+
+            <!-- Fast Messaging Card -->
             <div class="feature-card">
                 <h3>Fast messaging</h3>
-                <p>Real-time data transmission ensures your texts, photos, and videos are delivered instantly.</p>
+                <p>Real-time data transmission ensures your texts are delivered instantly.</p>
             </div>
+
+            <!-- Powered By Card (Restored) -->
             <div class="feature-card">
-                <h3>Media sharing supported</h3>
-                <p>Send Photos, Videos and Voice messages seamlessly within the chat room.</p>
+                <h3>Powered by APNA ADDA</h3>
+                <p>Technology for everyday growth. <a href="https://apnaaddatech.github.io/Official_/" target="_blank">CLICK HERE FOR OFFICIAL WEB</a></p>
             </div>
         </div>
 
@@ -363,18 +360,7 @@
         <div class="messages-container" id="messages-list"></div>
 
         <div class="chat-input-area" id="chat-input-area">
-            <input type="file" id="media-input" style="display:none;" accept="image/*,video/*" onchange="handleFileSelect(this)">
-            
-            <i class="fas fa-paperclip chat-action-btn" onclick="document.getElementById('media-input').click()"></i>
-            
-            <!-- LOADING INDICATOR -->
-            <div id="media-loader" class="media-loader"></div>
-            
-            <input type="text" class="chat-input" id="message-input" placeholder="Message...">
-            
-            <!-- MIC BUTTON WITH HOLD LOGIC -->
-            <i class="fas fa-microphone chat-action-btn" id="mic-btn"></i>
-            
+            <input type="text" class="chat-input" id="message-input" placeholder="Type a message...">
             <i class="fas fa-paper-plane chat-action-btn" onclick="sendTextMessage()"></i>
         </div>
         <div id="blocked-msg-bar" style="background:#222; color:red; text-align:center; padding:10px; display:none; font-size:0.8rem;">
@@ -404,7 +390,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, set, get, child, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-        import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyASV-WrIe0geG86X5cZS5cfVwYv-6mdrUM",
@@ -419,17 +404,12 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
-        const storage = getStorage(app);
 
         let currentUser = null;
         let currentChatId = null;
         let currentChatUser = null;
         let emojis = ["😎", "😊", "🚀", "🦁", "🐼", "🔥", "💎", "👽", "🤖", "👻"];
         let currentEmojiIdx = 0;
-        let mediaRecorder;
-        let audioChunks = [];
-        let isRecording = false;
-        let micPressStartTime = 0;
         
         const ADMIN_EMAIL = "thepremanshu@gmail.com";
         const ADMIN_PASS_REQ = "werttyy";
@@ -677,9 +657,12 @@
             const div = document.createElement('div');
             div.className = `message ${isMe ? 'msg-sent' : 'msg-received'}`;
             let content = msg.content;
+            
+            // Legacy Media Support (Read Only)
             if (msg.type === 'image') content = `<div class="msg-media"><img src="${msg.content}"></div>`;
             else if (msg.type === 'video') content = `<div class="msg-media"><video controls src="${msg.content}"></video></div>`;
             else if (msg.type === 'audio') content = `<audio controls src="${msg.content}"></audio>`;
+            
             div.innerHTML = `${content}<span class="msg-time">${new Date(msg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span><div class="msg-delete" onclick="deleteMessage('${key}')"><i class="fas fa-trash"></i></div>`;
             document.getElementById('messages-list').appendChild(div);
         }
@@ -700,111 +683,6 @@
             });
         }
         window.deleteMessage = (key) => confirmAction("Delete", "Delete message?", () => remove(ref(db, `chats/${currentChatId}/messages/${key}`)));
-
-        // --- MEDIA & LOADING LOGIC ---
-        function showLoader() { document.getElementById('media-loader').style.display = 'block'; }
-        function hideLoader() { document.getElementById('media-loader').style.display = 'none'; }
-
-        // Wrapper to enforce 30s timeout
-        function uploadWithTimeout(storageRef, file) {
-            return new Promise((resolve, reject) => {
-                const uploadTask = uploadBytes(storageRef, file);
-                const timer = setTimeout(() => {
-                    // We can't cancel a generic promise easily here without more code,
-                    // but we can reject the flow so UI updates.
-                    reject(new Error("Timeout")); 
-                }, 30000); 
-
-                uploadTask.then((snapshot) => {
-                    clearTimeout(timer);
-                    resolve(snapshot);
-                }).catch((err) => {
-                    clearTimeout(timer);
-                    reject(err);
-                });
-            });
-        }
-
-        window.handleFileSelect = (input) => {
-            const file = input.files[0];
-            if (!file) return;
-            const type = file.type.startsWith('image') ? 'image' : 'video';
-            
-            showLoader();
-            
-            const fileRef = sRef(storage, `chat/${Date.now()}_${file.name}`);
-            
-            uploadWithTimeout(fileRef, file)
-                .then(snapshot => getDownloadURL(snapshot.ref))
-                .then(url => {
-                    pushMessage(type, url);
-                    hideLoader();
-                    showToast("Sent successfully");
-                })
-                .catch(err => {
-                    hideLoader();
-                    if(err.message === "Timeout") showToast("Failed: Network too slow (30s limit)");
-                    else showToast("Upload Failed");
-                });
-        };
-
-        // --- VOICE RECORDER LOGIC (HOLD TO RECORD) ---
-        const micBtn = document.getElementById('mic-btn');
-
-        const startMic = (e) => {
-            if(e.cancelable) e.preventDefault(); 
-            micPressStartTime = Date.now();
-            isRecording = true;
-            micBtn.classList.add('recording-active');
-            
-            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
-                mediaRecorder.start();
-                mediaRecorder.addEventListener("dataavailable", e => audioChunks.push(e.data));
-            });
-        };
-
-        const stopMic = (e) => {
-            if(!isRecording) return;
-            isRecording = false;
-            micBtn.classList.remove('recording-active');
-            
-            const duration = Date.now() - micPressStartTime;
-            
-            if (duration < 600) { // Short tap check
-                if(mediaRecorder) mediaRecorder.stop();
-                showToast("Hold microphone to record");
-                return;
-            }
-
-            // Normal Recording
-            if(mediaRecorder) {
-                mediaRecorder.addEventListener("stop", () => {
-                    showLoader();
-                    const blob = new Blob(audioChunks, { type: 'audio/mp3' });
-                    const fileRef = sRef(storage, `voice/${Date.now()}.mp3`);
-                    
-                    uploadWithTimeout(fileRef, blob)
-                        .then(snapshot => getDownloadURL(snapshot.ref))
-                        .then(url => {
-                            pushMessage('audio', url);
-                            hideLoader();
-                        })
-                        .catch(err => {
-                            hideLoader();
-                            showToast("Voice Send Failed");
-                        });
-                });
-                mediaRecorder.stop();
-            }
-        };
-
-        // Attach listeners for both Touch and Mouse
-        micBtn.addEventListener('mousedown', startMic);
-        micBtn.addEventListener('mouseup', stopMic);
-        micBtn.addEventListener('touchstart', startMic);
-        micBtn.addEventListener('touchend', stopMic);
 
         function loadChats() {
             const listDiv = document.getElementById('chat-list-container');
@@ -840,4 +718,4 @@
         window.closeConfirm = () => { document.getElementById('confirm-modal').style.display='none'; confirmCb=null; };
     </script>
 </body>
-</html>
+    </html>
