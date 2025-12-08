@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Mobile Optimization Meta Tags -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>NAMASTE - Powered by Apna Adda</title>
     
@@ -21,9 +20,8 @@
             --text-color: #FFFFFF;
             --text-secondary: #B0B3B8;
             --danger: #FF3B30;
-            --silver: #E0E0E0;
             --accent-gradient: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-            /* Safe Area Variables for Notches */
+            /* Safe Area Variables for iPhone Notch/Home Bar */
             --safe-top: env(safe-area-inset-top);
             --safe-bottom: env(safe-area-inset-bottom);
         }
@@ -33,21 +31,21 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            -webkit-tap-highlight-color: transparent; /* Remove blue tap highlight */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background-color: #000;
             color: var(--text-color);
+            /* Force full height on mobile browsers */
             height: 100vh;
-            height: 100dvh; /* Dynamic Height for Mobile Browsers */
+            height: 100dvh; 
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden; 
         }
 
-        /* --- Animations --- */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -58,40 +56,32 @@
         #app-container {
             background-color: var(--bg-color);
             position: relative;
-            overflow: hidden; /* Prevent body scroll within app */
-            transition: all 0.5s ease-in-out;
+            overflow: hidden; 
             display: flex;
             flex-direction: column;
+            transition: all 0.5s ease-in-out;
         }
 
-        /* 1. WEB LAYOUT (Home Page) */
-        #app-container.layout-web { 
-            width: 100%; 
-            height: 100%; 
-            max-width: 100%; 
-            border-radius: 0;
-            overflow-y: auto; /* Scrollable web page */
-        }
-
-        /* 2. MOBILE LAYOUT (Chat App) */
+        /* WEB LAYOUT */
+        #app-container.layout-web { width: 100%; height: 100%; max-width: 100%; border-radius: 0; overflow-y: auto; display: block; }
+        
+        /* MOBILE LAYOUT */
         #app-container.layout-mobile {
             width: 100%; 
-            max-width: 450px; /* Limits width on Desktop */
+            max-width: 450px; 
             height: 95vh;
             border-radius: 20px;
             box-shadow: 0 0 50px rgba(37, 211, 102, 0.15);
             border: 1px solid #333;
+            /* Flex layout ensures footer stays at bottom */
+            display: flex;
+            flex-direction: column; 
         }
 
-        /* True Mobile Device Overrides */
         @media (max-width: 500px) {
             #app-container.layout-mobile { 
-                height: 100vh; 
-                height: 100dvh; /* Full screen on mobile */
-                border-radius: 0; 
-                max-width: 100%;
-                border: none;
-                box-shadow: none;
+                height: 100vh; height: 100dvh; 
+                border-radius: 0; max-width: 100%; border: none; box-shadow: none; 
             }
         }
 
@@ -104,38 +94,31 @@
             box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
         }
         .btn-primary:active { transform: scale(0.98); }
-        .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
-
         .btn-secondary {
             background: transparent; border: 2px solid var(--primary); color: var(--primary);
             padding: 12px 24px; border-radius: 30px; font-weight: 600; width: 100%; margin-top: 10px;
         }
-        
-        .btn-cancel-edit {
-            background: #333; color: white; margin-top: 10px; width: 100%; padding: 12px; border-radius: 30px;
-        }
+        .btn-cancel-edit { background: #333; color: white; margin-top: 10px; width: 100%; padding: 12px; border-radius: 30px; }
 
         input {
             width: 100%; padding: 15px; background: var(--surface-color);
-            border: 1px solid #333; border-radius: 12px; color: white; margin-bottom: 15px; 
-            font-size: 16px; /* Prevents zoom on iOS */
+            border: 1px solid #333; border-radius: 12px; color: white; margin-bottom: 15px; font-size: 16px; 
         }
         input:focus { border-color: var(--primary); }
 
         /* --- Screens --- */
+        /* Screen class for Mobile Layout (Flex Column) */
         .screen { 
             display: none; 
             flex-direction: column; 
             height: 100%; 
             width: 100%; 
-            position: absolute; 
-            top: 0; left: 0; 
             background: var(--bg-color); 
-            z-index: 10; 
         }
-        
-        #app-container.layout-web .screen.active { position: relative; height: auto; min-height: 100%; }
         .screen.active { display: flex; }
+        
+        /* Web Layout Override */
+        #app-container.layout-web .screen.active { display: block; height: auto; min-height: 100%; }
 
         /* --- Home Screen --- */
         #home-screen { padding: 40px; max-width: 1200px; margin: 0 auto; }
@@ -144,64 +127,91 @@
         .tagline { font-size: 16px; color: var(--text-secondary); margin-top: 5px; text-transform: uppercase; letter-spacing: 3px; }
         
         .highlights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 50px; }
-        .highlight-card { background: var(--surface-color); padding: 30px; border-radius: 15px; border-left: 4px solid var(--primary); transition: transform 0.3s; }
+        .highlight-card { background: var(--surface-color); padding: 30px; border-radius: 15px; border-left: 4px solid var(--primary); }
         .highlight-title { font-weight: 600; color: var(--silver); margin-bottom: 12px; font-size: 18px; display: flex; align-items: center; gap: 10px; }
         .highlight-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
         .about-section { background: #1a1a1a; padding: 40px; border-radius: 15px; margin: 20px auto; font-size: 14px; color: var(--text-secondary); line-height: 1.8; max-width: 800px; border: 1px solid #333; }
         
-        .home-footer { margin-top: 50px; padding: 30px 0; text-align: center; display: flex; justify-content: center; gap: 20px; border-top: 1px solid #333; flex-wrap: wrap; flex-direction: column; align-items: center; }
+        .home-footer { margin-top: 50px; padding: 30px 0; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px; border-top: 1px solid #333; }
         .social-row { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
         .social-link { color: var(--primary); text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; background: #222; padding: 10px 15px; border-radius: 20px; border: 1px solid #333; transition: all 0.3s; }
         .footer-credits { margin-top: 20px; font-size: 11px; color: #555; letter-spacing: 1px; line-height: 1.6; text-transform: uppercase; }
 
         /* --- Auth & Profile --- */
         .auth-container { padding: 30px; display: flex; flex-direction: column; justify-content: center; height: 100%; overflow-y: auto; }
-        
         .dp-preview-wrapper { width: 120px; height: 120px; margin: 0 auto 20px auto; position: relative; flex-shrink: 0; }
         .dp-preview-img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; background: #222; }
-        
         .emoji-selector { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 20px; padding: 10px; background: #222; border-radius: 15px; max-height: 150px; overflow-y: auto; }
-        .emoji-btn { font-size: 24px; background: transparent; cursor: pointer; padding: 5px; border-radius: 5px; transition: transform 0.2s; text-align: center; }
+        .emoji-btn { font-size: 24px; background: transparent; cursor: pointer; padding: 5px; border-radius: 5px; text-align: center; }
         .emoji-btn.selected { background: var(--primary-dark); }
 
-        /* --- App Header (Mobile Optimized) --- */
+        /* --- App Header --- */
         .app-header { 
             padding: 15px 20px; 
-            padding-top: max(15px, var(--safe-top)); /* Notch Support */
+            padding-top: max(15px, var(--safe-top)); 
             background: var(--surface-color); 
             display: flex; justify-content: space-between; align-items: center; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3); z-index: 20; position: relative; 
-            flex-shrink: 0; /* Prevents shrinking */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3); z-index: 20; 
+            flex-shrink: 0; /* Prevents header from shrinking */
         }
         .header-title { font-size: 18px; font-weight: 700; color: white; }
         .more-options { padding: 10px; cursor: pointer; } 
-        
         .dropdown-menu { position: absolute; right: 10px; top: 60px; background: #2A2A2A; border-radius: 8px; width: 160px; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 100; }
         .dropdown-menu.show { display: block; animation: fadeIn 0.2s; }
         .dropdown-item { padding: 12px 15px; font-size: 14px; cursor: pointer; color: white; border-bottom: 1px solid #333; }
-        
-        /* Content Area */
+
+        /* --- Content Area (Scrollable) --- */
         .content-area { 
-            flex: 1; 
+            flex: 1; /* Takes all available height between Header and Footer */
             overflow-y: auto; 
             position: relative; 
-            -webkit-overflow-scrolling: touch; /* Momentum scrolling */
+            -webkit-overflow-scrolling: touch; 
         }
 
-        /* --- BIG FOOTER (Mobile Optimized) --- */
+        /* --- UPDATED FOOTER (Bottom Nav) --- */
         .bottom-nav { 
             background: var(--surface-color); 
             display: flex; 
-            justify-content: space-around; 
-            padding: 15px 0; 
-            padding-bottom: max(15px, var(--safe-bottom)); /* Home Bar Support */
+            flex-direction: column; /* Stack Icons above Text */
+            align-items: center;
+            padding-top: 12px;
+            padding-bottom: max(10px, var(--safe-bottom)); 
             border-top: 1px solid #333; 
-            margin-top: auto; 
-            flex-shrink: 0;
+            flex-shrink: 0; /* Ensures Footer never shrinks or gets hidden */
+            z-index: 40;
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); font-size: 12px; cursor: pointer; gap: 5px; transition: all 0.2s ease; flex: 1; }
-        .nav-item i { font-size: 24px; margin-bottom: 3px; }
+
+        .bottom-nav-icons {
+            display: flex;
+            width: 100%;
+            justify-content: space-around;
+            margin-bottom: 8px;
+        }
+
+        .nav-item { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            color: var(--text-secondary); 
+            font-size: 13px; 
+            cursor: pointer; 
+            gap: 4px; 
+            flex: 1;
+        }
+        .nav-item i { font-size: 26px; }
         .nav-item.active { color: var(--primary); }
+
+        .bottom-nav-credit {
+            font-size: 9px;
+            color: #666;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .bottom-nav-credit a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
 
         /* --- Lists --- */
         .list-item { padding: 15px 20px; display: flex; align-items: center; border-bottom: 1px solid #222; cursor: pointer; }
@@ -210,42 +220,24 @@
         .item-name { font-weight: 600; font-size: 16px; color: white; }
         .item-sub { font-size: 13px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* --- Chat Room (Full Flexbox) --- */
+        /* --- Chat Room Overlay --- */
         #chat-room { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: var(--bg-color); z-index: 30; display: none; 
+            background: var(--bg-color); z-index: 50; display: none; 
             flex-direction: column; 
         }
         #chat-room.active { display: flex; }
-        
-        .chat-messages { 
-            flex: 1; 
-            padding: 15px; 
-            overflow-y: auto; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px; 
-            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); 
-            background-blend-mode: soft-light; 
-            -webkit-overflow-scrolling: touch;
-        }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-blend-mode: soft-light; }
         .message { max-width: 75%; padding: 10px 14px; border-radius: 15px; font-size: 14px; position: relative; word-wrap: break-word; }
         .message.sent { background: var(--primary-dark); align-self: flex-end; border-bottom-right-radius: 2px; }
         .message.received { background: #333; align-self: flex-start; border-bottom-left-radius: 2px; }
-        
-        .chat-input-area { 
-            padding: 10px; 
-            padding-bottom: max(10px, var(--safe-bottom)); 
-            background: var(--surface-color); 
-            display: flex; align-items: center; gap: 10px; 
-            flex-shrink: 0;
-        }
+        .chat-input-area { padding: 10px; padding-bottom: max(10px, var(--safe-bottom)); background: var(--surface-color); display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
         .send-btn { background: var(--primary); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; }
 
         /* --- Profile View --- */
         .profile-view { padding: 30px; text-align: center; }
         .profile-label { color: var(--text-secondary); font-size: 12px; margin-bottom: 5px; display: block; text-align: left; margin-top: 15px; }
-        
+
         /* --- Modal & Toast --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; display: none; justify-content: center; align-items: center; }
         .modal-box { background: #222; padding: 25px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; border: 1px solid #333; }
@@ -377,7 +369,7 @@
         </div>
     </div>
 
-    <!-- 4. APP SCREEN -->
+    <!-- 4. APP SCREEN (MAIN CHAT DASHBOARD) -->
     <div id="app-screen" class="screen">
         <div class="app-header">
             <div>
@@ -387,7 +379,6 @@
             <div class="more-options" id="menu-btn" onclick="toggleMenu(event)">
                 <i class="fas fa-ellipsis-v" style="color: white;"></i>
             </div>
-            <!-- Menu inside header relative -->
             <div class="dropdown-menu" id="main-menu">
                 <div class="dropdown-item" onclick="showBlockedUsers()">Blocked Users</div>
                 <div class="dropdown-item" onclick="toggleHomeFooter()">View Home Page</div>
@@ -412,8 +403,6 @@
         
         <!-- Profile Tab -->
         <div id="tab-profile" class="content-area" style="display: none;">
-            
-            <!-- VIEW MODE -->
             <div id="profile-view-mode" class="profile-view animate-arrival">
                 <div class="dp-preview-wrapper">
                     <img src="" id="view-profile-img" class="dp-preview-img">
@@ -422,34 +411,33 @@
                 <p id="view-profile-user" style="color: var(--primary); margin-bottom: 30px;">@username</p>
                 <button class="btn-primary" onclick="enableEditMode()">Edit Profile</button>
             </div>
-
-            <!-- EDIT MODE -->
             <div id="profile-edit-mode" class="profile-view" style="display: none;">
                 <h3 style="color:white; margin-bottom: 20px;">Edit Profile</h3>
                 <div class="dp-preview-wrapper"><img src="" id="edit-profile-img" class="dp-preview-img"></div>
-                
                 <div style="text-align: left;">
                     <p style="font-size:12px; color:var(--text-secondary); margin-bottom:5px;">Change Avatar:</p>
                     <div class="emoji-selector" id="edit-emoji-grid"></div>
-                    
                     <label class="profile-label">Edit Name</label>
                     <input type="text" id="edit-name-input">
-
                     <label class="profile-label">Edit Username (Must be unique)</label>
                     <input type="text" id="edit-username-input">
-                    
                     <button class="btn-primary" id="btn-update-profile" onclick="updateProfile()">Save Changes</button>
                     <button class="btn-cancel-edit" onclick="cancelEditMode()">Cancel</button>
                 </div>
             </div>
-
         </div>
 
+        <!-- NEW FIXED FOOTER -->
         <div class="bottom-nav">
-            <div class="nav-item active" onclick="switchTab('chats', this)"><i class="fas fa-comment-alt"></i><span>Chats</span></div>
-            <div class="nav-item" onclick="switchTab('calls', this)"><i class="fas fa-phone-alt"></i><span>Calls</span></div>
-            <div class="nav-item" onclick="switchTab('search', this)"><i class="fas fa-search"></i><span>Search</span></div>
-            <div class="nav-item" onclick="switchTab('profile', this)"><i class="fas fa-user"></i><span>Profile</span></div>
+            <div class="bottom-nav-icons">
+                <div class="nav-item active" onclick="switchTab('chats', this)"><i class="fas fa-comment-alt"></i><span>Chats</span></div>
+                <div class="nav-item" onclick="switchTab('calls', this)"><i class="fas fa-phone-alt"></i><span>Calls</span></div>
+                <div class="nav-item" onclick="switchTab('search', this)"><i class="fas fa-search"></i><span>Search</span></div>
+                <div class="nav-item" onclick="switchTab('profile', this)"><i class="fas fa-user"></i><span>Profile</span></div>
+            </div>
+            <div class="bottom-nav-credit">
+                POWERED BY <a href="https://apnaaddatech.github.io/Official_/" target="_blank">APNA ADDA</a>
+            </div>
         </div>
     </div>
 
@@ -513,7 +501,7 @@
     let currentUserData = null;
 
     // Emojis List
-    const emojiList = ["😎","🤠","🤓","🥳","👽","🤖","👻","💀","❤️","🤡","👹","🐯","🦁","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯","🦄","🐲","🔥","⚡","⭐","⚽","🏀"];
+    const emojiList = ["😎","🤠","🤓","🥳","👽","🤖","👻","💀","💩","🤡","👹","🐯","🦁","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯","🦄","🐲","🔥","⚡","⭐","⚽","🏀"];
 
     const screens = { home: document.getElementById('home-screen'), auth: document.getElementById('auth-screen'), setup: document.getElementById('setup-screen'), app: document.getElementById('app-screen'), blocked: document.getElementById('blocked-users-screen') };
     const appContainer = document.getElementById('app-container');
@@ -800,4 +788,4 @@
     function showToast(m) { const t=document.getElementById('toast'); t.innerText=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
 </script>
 </body>
-                </html>
+    </html>
