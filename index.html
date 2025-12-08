@@ -17,6 +17,8 @@
             --primary-dark: #128C7E;
             --bg-color: #121212;
             --surface-color: #1E1E1E;
+            --message-received: #2A2A2A;
+            --message-sent: #005c4b;
             --text-color: #FFFFFF;
             --text-secondary: #B0B3B8;
             --danger: #FF3B30;
@@ -37,7 +39,7 @@
             background-color: #000;
             color: var(--text-color);
             height: 100vh;
-            height: 100dvh; /* Dynamic viewport height for mobile */
+            height: 100dvh; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -50,31 +52,28 @@
         }
         .animate-arrival { animation: fadeIn 0.4s ease-out forwards; }
 
-        /* --- Main App Container --- */
+        /* --- Main Container --- */
         #app-container {
             background-color: var(--bg-color);
             position: relative;
             overflow: hidden;
             display: flex;
-            flex-direction: column; /* Stack children vertically */
+            flex-direction: column; 
             transition: all 0.5s ease-in-out;
         }
 
-        /* WEB LAYOUT */
         #app-container.layout-web { width: 100%; height: 100%; max-width: 100%; border-radius: 0; overflow-y: auto; display: block; }
         
-        /* MOBILE LAYOUT (Chat App) */
         #app-container.layout-mobile {
             width: 100%; 
             max-width: 450px; 
-            height: 100%; /* Fill parent */
+            height: 100%; 
             max-height: 100dvh;
-            border-radius: 0; /* Full screen feel */
+            border-radius: 0; 
             box-shadow: none;
             border: none;
         }
 
-        /* On Desktop, give it a phone look */
         @media (min-width: 501px) {
             #app-container.layout-mobile {
                 height: 95vh;
@@ -99,23 +98,15 @@
         }
         .btn-cancel-edit { background: #333; color: white; margin-top: 10px; width: 100%; padding: 12px; border-radius: 30px; }
 
-        input {
+        input[type="text"], input[type="email"], input[type="password"] {
             width: 100%; padding: 15px; background: var(--surface-color);
             border: 1px solid #333; border-radius: 12px; color: white; margin-bottom: 15px; font-size: 16px; 
         }
         input:focus { border-color: var(--primary); }
 
         /* --- Screens --- */
-        .screen { 
-            display: none; 
-            flex-direction: column; 
-            height: 100%; 
-            width: 100%; 
-            background: var(--bg-color); 
-        }
+        .screen { display: none; flex-direction: column; height: 100%; width: 100%; background: var(--bg-color); }
         .screen.active { display: flex; }
-        
-        /* Web Layout Override */
         #app-container.layout-web .screen.active { display: block; height: auto; min-height: 100%; }
 
         /* --- Home Screen --- */
@@ -143,14 +134,14 @@
         .emoji-btn { font-size: 24px; background: transparent; cursor: pointer; padding: 5px; border-radius: 5px; text-align: center; }
         .emoji-btn.selected { background: var(--primary-dark); }
 
-        /* --- App Header (Fixed Top) --- */
+        /* --- App Header --- */
         .app-header { 
             padding: 15px 20px; 
             padding-top: max(15px, var(--safe-top)); 
             background: var(--surface-color); 
             display: flex; justify-content: space-between; align-items: center; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.3); z-index: 20; 
-            flex-shrink: 0; /* Ensures header never shrinks */
+            flex-shrink: 0; 
         }
         .header-title { font-size: 18px; font-weight: 700; color: white; }
         .more-options { padding: 10px; cursor: pointer; } 
@@ -158,17 +149,17 @@
         .dropdown-menu.show { display: block; animation: fadeIn 0.2s; }
         .dropdown-item { padding: 12px 15px; font-size: 14px; cursor: pointer; color: white; border-bottom: 1px solid #333; }
 
-        /* --- Content Area (Scrollable Middle) --- */
+        /* --- Content Area --- */
         .content-area { 
-            flex: 1 1 auto; /* Grow and Shrink, but basis auto */
-            overflow-y: auto; /* Enable internal scrolling */
+            flex: 1 1 auto; 
+            overflow-y: auto; 
             position: relative; 
-            min-height: 0; /* Crucial for Flexbox scrolling */
+            min-height: 0; 
             -webkit-overflow-scrolling: touch;
-            padding-bottom: 20px; /* Extra padding so last item clears footer visuals */
+            padding-bottom: 20px; 
         }
 
-        /* --- Footer (Fixed Bottom) --- */
+        /* --- Footer --- */
         .bottom-nav { 
             background: var(--surface-color); 
             display: flex; 
@@ -177,45 +168,15 @@
             padding-top: 15px;
             padding-bottom: max(15px, var(--safe-bottom)); 
             border-top: 1px solid #333; 
-            flex-shrink: 0; /* Ensures Footer never shrinks or hides */
+            flex-shrink: 0; 
             z-index: 40;
         }
-
-        .bottom-nav-icons {
-            display: flex;
-            width: 100%;
-            justify-content: space-around;
-            margin-bottom: 10px;
-        }
-
-        .nav-item { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            color: var(--text-secondary); 
-            font-size: 12px; 
-            cursor: pointer; 
-            gap: 5px; 
-            flex: 1;
-        }
+        .bottom-nav-icons { display: flex; width: 100%; justify-content: space-around; margin-bottom: 10px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); font-size: 12px; cursor: pointer; gap: 5px; flex: 1; }
         .nav-item i { font-size: 24px; }
         .nav-item.active { color: var(--primary); }
-
-        .bottom-nav-credit {
-            font-size: 10px;
-            color: #666;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            width: 100%;
-            text-align: center;
-            padding-top: 5px;
-            border-top: 1px solid #2a2a2a;
-        }
-        .bottom-nav-credit a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 700;
-        }
+        .bottom-nav-credit { font-size: 10px; color: #666; letter-spacing: 1px; text-transform: uppercase; width: 100%; text-align: center; padding-top: 5px; border-top: 1px solid #2a2a2a; }
+        .bottom-nav-credit a { color: var(--primary); text-decoration: none; font-weight: 700; }
 
         /* --- Lists --- */
         .list-item { padding: 15px 20px; display: flex; align-items: center; border-bottom: 1px solid #222; cursor: pointer; }
@@ -224,19 +185,127 @@
         .item-name { font-weight: 600; font-size: 16px; color: white; }
         .item-sub { font-size: 13px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* --- Chat Room Overlay --- */
-        #chat-room { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background: var(--bg-color); z-index: 50; display: none; 
-            flex-direction: column; 
-        }
+        /* --- Chat Room UI --- */
+        #chat-room { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 50; display: none; flex-direction: column; }
         #chat-room.active { display: flex; }
-        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-blend-mode: soft-light; }
-        .message { max-width: 75%; padding: 10px 14px; border-radius: 15px; font-size: 14px; position: relative; word-wrap: break-word; }
-        .message.sent { background: var(--primary-dark); align-self: flex-end; border-bottom-right-radius: 2px; }
-        .message.received { background: #333; align-self: flex-start; border-bottom-left-radius: 2px; }
-        .chat-input-area { padding: 10px; padding-bottom: max(10px, var(--safe-bottom)); background: var(--surface-color); display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-        .send-btn { background: var(--primary); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; }
+        
+        .chat-messages { 
+            flex: 1; 
+            padding: 15px; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); 
+            background-blend-mode: soft-light; 
+        }
+
+        .message { 
+            max-width: 80%; 
+            padding: 8px 12px; 
+            border-radius: 12px; 
+            font-size: 14px; 
+            position: relative; 
+            word-wrap: break-word; 
+            line-height: 1.4;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message.sent { 
+            background: var(--message-sent); 
+            align-self: flex-end; 
+            border-top-right-radius: 0; 
+        }
+        .message.received { 
+            background: var(--message-received); 
+            align-self: flex-start; 
+            border-top-left-radius: 0; 
+        }
+
+        .message-time {
+            font-size: 10px;
+            color: rgba(255,255,255,0.6);
+            align-self: flex-end;
+            margin-top: 4px;
+        }
+
+        .message img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        /* Voice Note Style */
+        .voice-note {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 150px;
+        }
+        .voice-play-icon { font-size: 20px; color: var(--text-color); }
+        .voice-wave { height: 3px; background: rgba(255,255,255,0.3); flex: 1; border-radius: 2px; position: relative; }
+        .voice-wave::after { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 40%; background: var(--primary); }
+
+        /* Input Area */
+        .chat-input-area { 
+            padding: 8px 10px; 
+            padding-bottom: max(8px, var(--safe-bottom)); 
+            background: var(--surface-color); 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            flex-shrink: 0; 
+        }
+        
+        .icon-btn { 
+            font-size: 20px; 
+            color: var(--text-secondary); 
+            padding: 8px; 
+            cursor: pointer; 
+        }
+        .icon-btn:hover { color: var(--primary); }
+
+        .chat-input-wrapper {
+            flex: 1;
+            background: #2a2a2a;
+            border-radius: 25px;
+            padding: 0 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        #message-input {
+            background: transparent;
+            border: none;
+            padding: 12px 0;
+            color: white;
+            margin: 0;
+            width: 100%;
+        }
+        #message-input:focus { outline: none; }
+
+        .send-btn { 
+            background: var(--primary); 
+            width: 45px; height: 45px; 
+            border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            color: white; 
+            flex-shrink: 0; 
+            font-size: 18px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .recording-ui {
+            flex: 1;
+            display: none; /* Toggled via JS */
+            align-items: center;
+            color: var(--danger);
+            font-weight: 600;
+            padding-left: 10px;
+            animation: pulseRed 1.5s infinite;
+        }
+        @keyframes pulseRed { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
         /* --- Profile View --- */
         .profile-view { padding: 30px; text-align: center; }
@@ -251,14 +320,6 @@
         .btn-cancel { background: #444; color: white; }
         .toast { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; font-size: 13px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 200; border: 1px solid var(--primary); width: max-content; }
         .toast.show { opacity: 1; }
-
-        /* --- Call Screen --- */
-        .call-screen { position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 200; display: none; flex-direction: column; align-items: center; justify-content: space-between; padding: 40px 20px; }
-        .call-avatar { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--surface-color); animation: pulse 2s infinite; }
-        .call-controls { display: flex; gap: 20px; padding-bottom: 50px; }
-        .call-btn { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; }
-        .btn-end { background: var(--danger); }
-        .btn-mute { background: #444; }
 
     </style>
 </head>
@@ -280,20 +341,6 @@
         </div>
     </div>
 
-    <!-- Call Screen -->
-    <div id="call-screen" class="call-screen">
-        <div style="text-align: center; margin-top: 50px;">
-            <img src="" id="call-avatar-img" class="call-avatar">
-            <h2 id="call-name" style="margin-top: 20px; color: white;">User</h2>
-            <p id="call-status" style="color: var(--primary);">Calling...</p>
-            <div id="local-video-preview" style="width: 100px; height: 150px; background: #222; margin-top: 20px; border-radius: 10px; display: none;"></div>
-        </div>
-        <div class="call-controls">
-            <button class="call-btn btn-mute"><i class="fas fa-microphone-slash"></i></button>
-            <button class="call-btn btn-end" onclick="endCall()"><i class="fas fa-phone-slash"></i></button>
-        </div>
-    </div>
-
     <!-- 1. HOME SCREEN (Web View) -->
     <div id="home-screen" class="screen active animate-arrival">
         <div class="hero-section">
@@ -312,7 +359,7 @@
         <div class="highlights-grid">
             <div class="highlight-card">
                 <div class="highlight-title"><i class="fas fa-lock"></i> End-to-end Encrypted</div>
-                <p class="highlight-desc">Your messages and calls are secured with industry-standard encryption.</p>
+                <p class="highlight-desc">Your messages are secured with industry-standard encryption.</p>
             </div>
             <div class="highlight-card">
                 <div class="highlight-title"><i class="fas fa-user-shield"></i> 100% Private & Secure</div>
@@ -321,6 +368,10 @@
             <div class="highlight-card">
                 <div class="highlight-title"><i class="fas fa-bolt"></i> Fast Messaging</div>
                 <p class="highlight-desc">Lightning-fast message delivery optimized for performance.</p>
+            </div>
+            <div class="highlight-card">
+                <div class="highlight-title"><i class="fas fa-photo-video"></i> Media Sharing</div>
+                <p class="highlight-desc">Share photos and voice notes instantly.</p>
             </div>
         </div>
 
@@ -391,10 +442,7 @@
         </div>
 
         <div id="tab-chats" class="content-area animate-arrival"><div id="chat-list-container"></div></div>
-        <div id="tab-calls" class="content-area" style="display: none;">
-            <div style="padding: 15px; text-align: right;"><span style="color: var(--danger); font-size: 12px; cursor: pointer;" onclick="clearCallHistory()">Clear History</span></div>
-            <div id="call-history-list"></div>
-        </div>
+        
         <div id="tab-search" class="content-area" style="display: none;">
             <div style="padding: 20px;">
                 <div style="display: flex; gap: 10px;">
@@ -435,7 +483,6 @@
         <div class="bottom-nav">
             <div class="bottom-nav-icons">
                 <div class="nav-item active" onclick="switchTab('chats', this)"><i class="fas fa-comment-alt"></i><span>Chats</span></div>
-                <div class="nav-item" onclick="switchTab('calls', this)"><i class="fas fa-phone-alt"></i><span>Calls</span></div>
                 <div class="nav-item" onclick="switchTab('search', this)"><i class="fas fa-search"></i><span>Search</span></div>
                 <div class="nav-item" onclick="switchTab('profile', this)"><i class="fas fa-user"></i><span>Profile</span></div>
             </div>
@@ -454,15 +501,26 @@
                 <div id="chat-room-name" style="color: white; font-weight: 600; font-size: 14px;">User</div>
                 <div style="color: var(--primary); font-size: 10px;">End-to-end encrypted</div>
             </div>
-            <i class="fas fa-phone" style="color: var(--primary); cursor: pointer;" onclick="initiateCall('voice')"></i>
-            <i class="fas fa-video" style="color: var(--primary); cursor: pointer; margin-left: 10px;" onclick="initiateCall('video')"></i>
             <i class="fas fa-trash" style="color: var(--danger); font-size: 14px; margin-left: 10px; cursor: pointer;" onclick="confirmDeleteChat()"></i>
         </div>
+        
         <div id="messages-container" class="chat-messages"></div>
+        
         <div class="chat-input-area">
-            <i class="fas fa-plus media-btn" onclick="alert('Media sharing simulated.')"></i>
-            <input type="text" id="message-input" placeholder="Message..." style="margin-bottom: 0; background: #2a2a2a; border: none;">
-            <div class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></div>
+            <!-- Hidden File Input -->
+            <input type="file" id="media-input" accept="image/*" hidden onchange="handleMediaUpload(this)">
+            
+            <i class="fas fa-plus icon-btn" onclick="document.getElementById('media-input').click()"></i>
+            
+            <div class="chat-input-wrapper">
+                <input type="text" id="message-input" placeholder="Message...">
+                <div class="recording-ui" id="recording-ui">Recording... 00:01</div>
+            </div>
+            
+            <!-- Dynamic Send/Mic Button -->
+            <div class="send-btn" id="action-btn" onclick="handleAction()">
+                <i class="fas fa-microphone" id="action-icon"></i>
+            </div>
         </div>
     </div>
 
@@ -503,6 +561,7 @@
     let currentUser = null, currentChatId = null, currentChatUser = null, isSignup = false;
     let selectedEmoji = "😎"; 
     let currentUserData = null;
+    let isRecording = false; // State for voice note
 
     // Emojis List
     const emojiList = ["😎","🤠","🤓","🥳","👽","🤖","👻","💀","💩","🤡","👹","🐯","🦁","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯","🦄","🐲","🔥","⚡","⭐","⚽","🏀"];
@@ -681,7 +740,7 @@
         document.querySelectorAll('.content-area').forEach(d => d.style.display = 'none');
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
         document.getElementById('tab-' + name).style.display = 'block'; el.classList.add('active');
-        if(name==='chats') loadChats(); if(name==='calls') loadCalls(); if(name==='profile') { loadProfile(); cancelEditMode(); }
+        if(name==='chats') loadChats(); if(name==='profile') { loadProfile(); cancelEditMode(); }
     }
 
     // --- Chat/Search ---
@@ -712,25 +771,92 @@
         db.ref('chats/' + currentChatId + '/messages').on('child_added', s => appendMessage(s.val()));
     }
 
+    // --- Message Rendering ---
     function appendMessage(m) {
         const c = document.getElementById('messages-container');
         const d = document.createElement('div');
         d.className = `message ${m.sender === currentUser.uid ? 'sent' : 'received'}`;
-        d.innerText = m.text;
+        
+        let contentHtml = "";
+        if (m.type === 'image') {
+            contentHtml = `<img src="${m.text}">`;
+        } else if (m.type === 'voice') {
+            contentHtml = `<div class="voice-note"><i class="fas fa-play-circle voice-play-icon"></i><div class="voice-wave"></div><span style="font-size:10px; opacity:0.7">0:05</span></div>`;
+        } else {
+            contentHtml = m.text;
+        }
+
+        const time = new Date(m.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        d.innerHTML = `${contentHtml}<span class="message-time">${time}</span>`;
+        
         d.onclick = () => { if(m.sender === currentUser.uid) showModal("Delete", "Delete message?", () => { d.style.display='none'; showToast("Deleted"); }); };
         c.appendChild(d); c.scrollTop = c.scrollHeight;
     }
 
-    function sendMessage() {
-        const i = document.getElementById('message-input'); const txt = i.value.trim(); if(!txt) return;
+    // --- Media & Voice Handling ---
+    function handleMediaUpload(input) {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                pushMessage(e.target.result, 'image', "Photo Sent");
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Update Input UI based on typing
+    document.getElementById('message-input').addEventListener('input', function() {
+        const icon = document.getElementById('action-icon');
+        if (this.value.trim().length > 0) {
+            icon.className = "fas fa-paper-plane"; // Send Icon
+        } else {
+            icon.className = "fas fa-microphone"; // Mic Icon
+        }
+    });
+
+    function handleAction() {
+        const input = document.getElementById('message-input');
+        const text = input.value.trim();
+
+        if (text.length > 0) {
+            // Send Text
+            pushMessage(text, 'text', text);
+            input.value = "";
+            document.getElementById('action-icon').className = "fas fa-microphone";
+        } else {
+            // Handle Voice Recording Toggle
+            if (!isRecording) {
+                isRecording = true;
+                document.getElementById('message-input').style.display = 'none';
+                document.getElementById('recording-ui').style.display = 'flex';
+                document.getElementById('action-icon').className = "fas fa-stop";
+            } else {
+                isRecording = false;
+                document.getElementById('message-input').style.display = 'block';
+                document.getElementById('recording-ui').style.display = 'none';
+                document.getElementById('action-icon').className = "fas fa-microphone";
+                // Send simulated voice note
+                pushMessage("Voice Note", 'voice', "Voice Message");
+            }
+        }
+    }
+
+    function pushMessage(content, type, lastMsgPreview) {
         db.ref(`users/${currentChatUser.uid}/blocked`).once('value').then(snap => {
             if(snap.exists() && Object.values(snap.val()).includes(currentUser.uid)) { showToast("Cannot message this user"); return; }
-            db.ref('chats/' + currentChatId + '/messages').push({ sender: currentUser.uid, text: txt, timestamp: Date.now() });
+            
+            db.ref('chats/' + currentChatId + '/messages').push({ 
+                sender: currentUser.uid, 
+                text: content, 
+                type: type,
+                timestamp: Date.now() 
+            });
+            
             const upd = {};
-            upd[`userChats/${currentUser.uid}/${currentChatId}`] = { withUser: currentChatUser.uid, lastMsg: "You: "+txt, time: Date.now() };
-            upd[`userChats/${currentChatUser.uid}/${currentChatId}`] = { withUser: currentUser.uid, lastMsg: txt, time: Date.now() };
+            upd[`userChats/${currentUser.uid}/${currentChatId}`] = { withUser: currentChatUser.uid, lastMsg: lastMsgPreview, time: Date.now() };
+            upd[`userChats/${currentChatUser.uid}/${currentChatId}`] = { withUser: currentUser.uid, lastMsg: lastMsgPreview, time: Date.now() };
             db.ref().update(upd);
-            i.value = "";
         });
     }
 
@@ -758,32 +884,11 @@
     function showBlockedUsers() { closeMenu(); showScreen('blocked'); const l = document.getElementById('blocked-list'); l.innerHTML=""; db.ref(`users/${currentUser.uid}/blocked`).once('value').then(s => { if(!s.exists()) { l.innerHTML="<p style='color:grey;text-align:center'>Empty</p>"; return; } s.forEach(b => db.ref('users/'+b.val()).once('value').then(u => l.innerHTML += `<div class="list-item"><img src="${u.val().photo}" class="avatar"><div class="item-info">${u.val().name}</div><button class="btn-secondary" style="width:auto;padding:5px 10px;font-size:12px" onclick="unblockUser('${b.key}')">Unblock</button></div>`)); }); }
     function unblockUser(k) { db.ref(`users/${currentUser.uid}/blocked/${k}`).remove().then(() => { showBlockedUsers(); showToast("Unblocked"); }); }
 
-    function initiateCall(type) {
-        navigator.mediaDevices.getUserMedia({ audio: true, video: type==='video' }).then(() => {
-            document.getElementById('call-screen').style.display = 'flex';
-            document.getElementById('call-avatar-img').src = currentChatUser.photo;
-            document.getElementById('call-name').innerText = currentChatUser.name;
-            document.getElementById('call-status').innerText = type==='video' ? "Video Calling..." : "Voice Calling...";
-            if(type==='video') document.getElementById('local-video-preview').style.display = 'block';
-            db.ref(`users/${currentUser.uid}/calls`).push({ name: currentChatUser.name, type, time: Date.now() });
-        }).catch(e => alert("Permission Denied"));
-    }
-    function endCall() { document.getElementById('call-screen').style.display='none'; document.getElementById('local-video-preview').style.display='none'; }
-    function loadCalls() { 
-        const c = document.getElementById('call-history-list'); c.innerHTML=""; 
-        db.ref(`users/${currentUser.uid}/calls`).limitToLast(20).once('value').then(s => {
-            if(!s.exists()) { c.innerHTML="<p style='color:grey;text-align:center;margin-top:20px'>No history.</p>"; return; }
-            const arr = []; s.forEach(x => arr.push(x.val()));
-            arr.reverse().forEach(cl => { c.innerHTML += `<div class="list-item animate-arrival"><div style="width:40px;height:40px;background:#333;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-right:15px;"><i class="fas ${cl.type==='video'?'fa-video':'fa-phone'}" style="color:var(--primary)"></i></div><div class="item-info"><div class="item-name">${cl.name}</div><span class="item-sub">${new Date(cl.time).toLocaleString()}</span></div></div>`; });
-        });
-    }
-
     // --- Utils ---
     function closeChat() { document.getElementById('chat-room').classList.remove('active'); loadChats(); }
     function closeBlockedScreen() { showScreen('app'); }
     function deleteEntireChat(id) { showModal("Delete", "Delete Chat?", () => db.ref(`userChats/${currentUser.uid}/${id}`).remove().then(() => { loadChats(); showToast("Deleted"); })); }
     function confirmDeleteChat() { deleteEntireChat(currentChatId); closeChat(); }
-    function clearCallHistory() { showModal("Clear", "Clear history?", () => db.ref(`users/${currentUser.uid}/calls`).remove().then(() => { loadCalls(); showToast("Cleared"); })); }
     
     let confirmCB = null;
     function showModal(t, txt, cb) { document.getElementById('modal-title').innerText=t; document.getElementById('modal-text').innerText=txt; document.getElementById('confirm-modal').style.display='flex'; confirmCB=cb; }
@@ -792,4 +897,4 @@
     function showToast(m) { const t=document.getElementById('toast'); t.innerText=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
 </script>
 </body>
-</html>
+    </html>
