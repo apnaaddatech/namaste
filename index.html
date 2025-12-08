@@ -62,13 +62,17 @@
         }
         input:focus { border-color: var(--primary); }
 
-        /* Blue Tick */
+        /* Blue Tick & Message Status */
         .verified-badge {
             display: inline-flex; align-items: center; justify-content: center; position: relative;
             margin-left: 6px; width: 18px; height: 18px; vertical-align: middle;
         }
         .verified-badge .fa-certificate { color: var(--insta-blue); font-size: 18px; filter: drop-shadow(0 0 2px rgba(0,0,0,0.5)); }
         .verified-badge .fa-check { color: white; font-size: 9px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+        /* Seen Status Ticks */
+        .msg-status { font-size: 0.7rem; margin-left: 5px; color: #888; } /* Default Grey */
+        .msg-status.seen { color: var(--insta-blue); } /* Seen Blue */
 
         /* --- Screen Containers --- */
         .screen { 
@@ -152,7 +156,6 @@
         .message { max-width: 80%; padding: 10px 15px; border-radius: 15px; font-size: 0.95rem; position: relative; word-wrap: break-word; animation: fadeIn 0.3s; }
         .msg-sent { align-self: flex-end; background: var(--primary); color: #000; border-bottom-right-radius: 2px; }
         .msg-received { align-self: flex-start; background: #333; color: white; border-bottom-left-radius: 2px; }
-        .msg-media img, .msg-media video { max-width: 100%; border-radius: 10px; margin-top: 5px; }
         .msg-time { font-size: 0.65rem; opacity: 0.7; display: block; text-align: right; margin-top: 4px; }
         .msg-delete { position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 10px; display: none; align-items: center; justify-content: center; cursor: pointer;}
         .message:hover .msg-delete { display: flex; }
@@ -234,7 +237,7 @@
                 <p>Real-time data transmission ensures your texts are delivered instantly.</p>
             </div>
 
-            <!-- Powered By Card (Restored) -->
+            <!-- Powered By Card -->
             <div class="feature-card">
                 <h3>Powered by APNA ADDA</h3>
                 <p>Technology for everyday growth. <a href="https://apnaaddatech.github.io/Official_/" target="_blank">CLICK HERE FOR OFFICIAL WEB</a></p>
@@ -630,11 +633,22 @@
             document.getElementById('messages-list').innerHTML = "";
             document.getElementById('chat-room').classList.remove('hidden');
             checkBlockStatus(targetUid);
+
+            // Listen for messages AND mark as seen if appropriate
             onValue(ref(db, `chats/${currentChatId}/messages`), (snapshot) => {
                 const list = document.getElementById('messages-list');
                 list.innerHTML = "";
                 if (snapshot.exists()) {
-                    snapshot.forEach((c) => renderMessage(c.val(), c.key));
+                    snapshot.forEach((c) => {
+                        const msg = c.val();
+                        const key = c.key;
+                        renderMessage(msg, key);
+                        
+                        // Mark as SEEN if message is from OTHER user and not yet seen
+                        if (msg.sender !== currentUser.uid && msg.status !== 'seen') {
+                            update(ref(db, `chats/${currentChatId}/messages/${key}`), { status: 'seen' });
+                        }
+                    });
                     list.scrollTop = list.scrollHeight;
                 }
             });
@@ -658,12 +672,24 @@
             div.className = `message ${isMe ? 'msg-sent' : 'msg-received'}`;
             let content = msg.content;
             
-            // Legacy Media Support (Read Only)
+            // Legacy Media (Read Only)
             if (msg.type === 'image') content = `<div class="msg-media"><img src="${msg.content}"></div>`;
             else if (msg.type === 'video') content = `<div class="msg-media"><video controls src="${msg.content}"></video></div>`;
             else if (msg.type === 'audio') content = `<audio controls src="${msg.content}"></audio>`;
             
-            div.innerHTML = `${content}<span class="msg-time">${new Date(msg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span><div class="msg-delete" onclick="deleteMessage('${key}')"><i class="fas fa-trash"></i></div>`;
+            // Status Icon Logic (Double Ticks)
+            let statusIcon = '';
+            if (isMe) {
+                const colorClass = msg.status === 'seen' ? 'seen' : '';
+                statusIcon = `<i class="fas fa-check-double msg-status ${colorClass}"></i>`;
+            }
+
+            div.innerHTML = `${content}
+                <div style="display:flex; justify-content:flex-end; align-items:center; margin-top:4px;">
+                    <span class="msg-time">${new Date(msg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+                    ${statusIcon}
+                </div>
+                <div class="msg-delete" onclick="deleteMessage('${key}')"><i class="fas fa-trash"></i></div>`;
             document.getElementById('messages-list').appendChild(div);
         }
         window.sendTextMessage = () => {
@@ -675,7 +701,7 @@
         function pushMessage(type, content) {
             get(child(ref(db), `blocked/${currentChatUser.uid}/${currentUser.uid}`)).then(s => {
                 if(s.exists()) return showToast("You are blocked");
-                const msgData = { sender: currentUser.uid, type, content, timestamp: Date.now() };
+                const msgData = { sender: currentUser.uid, type, content, timestamp: Date.now(), status: 'sent' };
                 push(ref(db, `chats/${currentChatId}/messages`), msgData);
                 const meta = { lastMessage: type==='text'?content:'Media', timestamp: Date.now(), with: currentChatUser.uid };
                 update(ref(db, `userChats/${currentUser.uid}/${currentChatId}`), meta);
@@ -718,4 +744,4 @@
         window.closeConfirm = () => { document.getElementById('confirm-modal').style.display='none'; confirmCb=null; };
     </script>
 </body>
-    </html>
+</html>
