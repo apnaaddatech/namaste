@@ -9,7 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -32,135 +32,92 @@
         body {
             background-color: #000;
             color: var(--text-primary);
-            /* Ensure body takes full screen but doesn't scroll itself */
-            height: 100vh;
-            height: 100dvh;
-            width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            height: 100vh; height: 100dvh;
+            display: flex; justify-content: center; align-items: center;
             overflow: hidden; 
         }
 
-        /* --- MAIN CONTAINER (The Switcher) --- */
+        /* --- Main Container --- */
         #app-container {
             background-color: var(--bg-color);
             position: relative;
             overflow: hidden;
+            display: flex; flex-direction: column;
             transition: all 0.4s ease-in-out;
         }
 
-        /* --- 1. WEB VIEW MODE (Home Page) --- */
+        /* Web View (Home) */
         #app-container.layout-web {
-            width: 100%;
-            height: 100%;
-            max-width: 100%;
-            border: none;
-            border-radius: 0;
-            display: block; /* Normal block flow for website */
-            overflow-y: auto; /* Allow scrolling like a website */
+            width: 100%; height: 100%; max-width: 100%;
+            border: none; border-radius: 0;
+            display: block; overflow-y: auto;
         }
 
-        /* --- 2. MOBILE APP MODE (Chat Interface) --- */
+        /* Mobile View (Chat App) */
         #app-container.layout-mobile {
-            width: 100%;
-            max-width: 450px; /* Phone width on desktop */
-            height: 100%;
-            max-height: 95vh; /* Slight gap on desktop */
-            border-radius: 20px;
-            border: 1px solid #333;
+            width: 100%; max-width: 450px;
+            height: 100%; max-height: 95vh;
+            border-radius: 20px; border: 1px solid #333;
             box-shadow: 0 0 50px rgba(0, 168, 132, 0.2);
-            display: flex;
-            flex-direction: column; /* App structure */
+            display: flex; flex-direction: column;
         }
 
-        /* Mobile Device Override */
         @media (max-width: 500px) {
-            #app-container.layout-mobile {
-                max-width: 100%;
-                max-height: 100dvh;
-                border-radius: 0;
-                border: none;
-            }
+            #app-container.layout-mobile { max-width: 100%; max-height: 100dvh; border-radius: 0; border: none; }
         }
 
-        /* --- Common Elements --- */
+        /* --- Common UI --- */
         .btn-primary { background: var(--primary); color: #111b21; padding: 12px; border-radius: 25px; font-weight: 600; width: 100%; border: none; cursor: pointer; }
-        .btn-secondary { background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 10px; border-radius: 25px; width: 100%; margin-top: 10px; cursor: pointer; }
+        .btn-secondary { background: transparent; border: 1px solid var(--text-secondary); color: var(--text-secondary); padding: 10px; border-radius: 25px; width: 100%; margin-top: 10px; cursor: pointer; font-size: 13px; }
         input { width: 100%; padding: 12px; background: #2a3942; border: none; border-radius: 8px; color: white; margin-bottom: 15px; outline: none; font-size: 16px; }
 
-        /* --- SCREENS --- */
-        .screen { display: none; width: 100%; height: 100%; background: var(--bg-color); }
-        .screen.active { display: flex; flex-direction: column; }
-        
-        /* Home Screen Specific (Web Layout) */
-        #home-screen.active { 
-            display: block; /* Block layout for scrolling website */
-            height: auto; 
-            min-height: 100%;
-        }
+        /* --- Screens --- */
+        .screen { display: none; width: 100%; height: 100%; background: var(--bg-color); flex-direction: column; }
+        .screen.active { display: flex; }
+        #home-screen.active { display: block; height: auto; min-height: 100%; }
 
-        /* --- 1. HOME PAGE STYLES (Web View) --- */
-        .hero-section { text-align: center; padding-top: 60px; padding-bottom: 40px; }
-        .app-title { font-size: 48px; font-weight: 700; color: var(--primary); letter-spacing: 2px; }
-        .tagline { font-size: 16px; color: var(--text-secondary); letter-spacing: 3px; margin-top: 5px; text-transform: uppercase; }
-        
+        /* --- Home Page (Web View) --- */
         .web-content { max-width: 1000px; margin: 0 auto; padding: 20px; }
-        
-        .highlights-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 25px; 
-            margin: 40px 0; 
-        }
+        .hero-section { text-align: center; padding: 60px 0 40px; }
+        .highlights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin: 40px 0; }
         .highlight-card { background: #202c33; padding: 30px; border-radius: 12px; border-left: 4px solid var(--primary); }
-        .highlight-card h3 { color: #e9edef; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-        .highlight-card p { color: #8696a0; font-size: 14px; line-height: 1.6; }
+        .highlight-card h3 { color: #e9edef; margin-bottom: 10px; }
+        .web-footer { border-top: 1px solid #333; padding: 40px 0; text-align: center; margin-top: 50px; background: #000; }
+        .social-link { color: var(--primary); text-decoration: none; font-size: 14px; background: #222; padding: 10px 20px; border-radius: 30px; margin: 5px; display: inline-block; }
 
-        .about-section { background: #111b21; padding: 40px; border-radius: 15px; border: 1px solid #333; margin-bottom: 40px; }
-        
-        .web-footer { 
-            border-top: 1px solid #333; padding: 40px 0; text-align: center; margin-top: 50px; 
-            background: #000;
-        }
-        .social-link { color: var(--primary); text-decoration: none; font-size: 14px; background: #222; padding: 10px 20px; border-radius: 30px; margin: 5px; display: inline-block; transition: 0.3s; }
-        .social-link:hover { background: #333; }
-
-        /* --- 2. APP UI STYLES (Mobile View) --- */
-        
-        /* Fixed Header */
+        /* --- App Header (Mobile Optimized) --- */
         .app-header {
-            flex-shrink: 0; /* Never shrink */
-            height: 60px;
-            padding: 0 15px;
+            flex-shrink: 0; /* Critical for visibility */
+            min-height: 60px;
+            padding: 10px 15px;
+            padding-top: max(10px, var(--safe-top));
             background: var(--header-bg);
             display: flex; align-items: center; justify-content: space-between;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-            z-index: 20;
+            z-index: 30; /* Higher than content */
+            position: relative;
         }
+        .header-left { display: flex; align-items: center; gap: 10px; overflow: hidden; cursor: pointer; flex: 1; }
         .header-title-small { font-size: 18px; font-weight: 600; color: white; }
         .header-sub-small { font-size: 10px; color: var(--text-secondary); }
+        
+        /* Dropdown Menu */
+        .dropdown-menu { position: absolute; right: 10px; top: 60px; background: #233138; border-radius: 6px; width: 170px; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 100; }
+        .dropdown-menu.show { display: block; animation: fadeIn 0.2s; }
+        .dropdown-item { padding: 12px 20px; font-size: 14px; cursor: pointer; color: white; border-bottom: 1px solid #182229; }
 
-        /* Scrollable Content */
-        .content-area {
-            flex-grow: 1; /* Fills available space */
-            overflow-y: auto; /* Internal scrolling */
-            position: relative;
-            scroll-behavior: smooth;
-            padding-bottom: 20px; /* Space for scrolling past footer visually if needed */
-        }
+        /* --- Content Area --- */
+        .content-area { flex: 1; overflow-y: auto; position: relative; scroll-behavior: smooth; padding-bottom: 20px; }
 
-        /* Fixed Footer */
+        /* --- Footer (App) --- */
         .app-footer {
-            flex-shrink: 0; /* Never shrink */
+            flex-shrink: 0;
             background: var(--header-bg);
             border-top: 1px solid #222d36;
             padding: 10px 0;
             padding-bottom: max(10px, var(--safe-bottom));
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 20;
+            display: flex; flex-direction: column; align-items: center;
+            z-index: 30;
         }
         .nav-icons-row { display: flex; width: 100%; justify-content: space-around; margin-bottom: 5px; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); cursor: pointer; flex: 1; }
@@ -170,70 +127,69 @@
         .powered-text { font-size: 10px; color: #555; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
         .powered-text a { color: var(--text-secondary); text-decoration: none; font-weight: bold; }
 
-        /* List Styling */
-        .list-item { padding: 12px 15px; display: flex; align-items: center; border-bottom: 1px solid #222d36; cursor: pointer; }
-        .list-item:hover { background: #202c33; }
-        .avatar-large { width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; object-fit: cover; background: #333; flex-shrink: 0; }
-        .item-info { flex: 1; overflow: hidden; }
-        .item-name { font-size: 16px; font-weight: 500; color: white; }
-        .item-sub { font-size: 13px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-        /* Menus */
-        .more-options { padding: 10px; cursor: pointer; position: relative; }
-        .dropdown-menu { position: absolute; right: 10px; top: 50px; background: #233138; border-radius: 6px; width: 160px; display: none; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 100; }
-        .dropdown-menu.show { display: block; }
-        .dropdown-item { padding: 12px 20px; font-size: 14px; cursor: pointer; color: white; border-bottom: 1px solid #182229; }
-
-        /* Chat Room Overlay */
+        /* --- Chat Room --- */
         #chat-room { z-index: 50; display: none; flex-direction: column; background: var(--bg-color); }
         #chat-room.active { display: flex; }
         
-        .chat-header { 
-            height: 60px; flex-shrink: 0; 
-            background: var(--header-bg); padding: 0 10px; 
-            display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2); 
-        }
-        
-        .chat-messages { 
-            flex: 1; 
-            overflow-y: auto; 
-            padding: 15px; 
+        .chat-bg {
+            flex: 1; overflow-y: auto; padding: 15px;
             background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
             background-color: #0b141a; background-blend-mode: overlay;
             display: flex; flex-direction: column; gap: 5px;
         }
-
-        .message { max-width: 80%; padding: 6px 10px; padding-bottom: 20px; border-radius: 8px; font-size: 14px; line-height: 1.4; position: relative; word-wrap: break-word; box-shadow: 0 1px 0.5px rgba(0,0,0,0.13); }
+        
+        .message { max-width: 80%; padding: 6px 10px; padding-bottom: 20px; border-radius: 8px; font-size: 14px; position: relative; word-wrap: break-word; box-shadow: 0 1px 0.5px rgba(0,0,0,0.13); }
         .message.sent { align-self: flex-end; background: var(--sent-bg); border-top-right-radius: 0; }
         .message.received { align-self: flex-start; background: var(--received-bg); border-top-left-radius: 0; }
         .msg-time { position: absolute; bottom: 3px; right: 7px; font-size: 10px; color: rgba(255,255,255,0.6); }
-        .msg-img { max-width: 100%; border-radius: 6px; margin-bottom: 5px; }
 
-        .chat-input-area { 
-            padding: 8px 10px; padding-bottom: max(8px, var(--safe-bottom)); 
-            background: var(--header-bg); flex-shrink: 0; 
+        .chat-input-bar {
             display: flex; align-items: flex-end; gap: 8px;
+            padding: 8px 10px; padding-bottom: max(8px, var(--safe-bottom));
+            background: var(--header-bg); flex-shrink: 0;
         }
         .input-wrapper { flex: 1; background: #2a3942; border-radius: 20px; display: flex; align-items: center; padding: 0 10px; min-height: 45px; }
         .icon-btn { font-size: 22px; color: #8696a0; padding: 8px; cursor: pointer; }
+        .mic-btn { width: 45px; height: 45px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #111b21; font-size: 18px; flex-shrink: 0; }
+
+        /* Blocked Banner */
+        .blocked-banner {
+            background: #182229; color: #f15c6d; text-align: center;
+            padding: 15px; font-size: 13px; border-top: 1px solid #333;
+            display: none; flex-shrink: 0;
+        }
+
+        /* --- Profile Styles --- */
+        .profile-view { padding: 30px 20px; text-align: center; }
+        .large-dp { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 4px solid var(--header-bg); }
+        .emoji-selector { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 20px; max-height: 150px; overflow-y: auto; }
+        .emoji-btn { font-size: 24px; cursor: pointer; padding: 5px; text-align: center; border-radius: 5px; }
         
-        /* Modal & Toast */
+        /* Modal */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; display: none; justify-content: center; align-items: center; }
         .modal-box { background: #3b4a54; padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; }
         .modal-btn { background: transparent; color: var(--primary); font-weight: 600; font-size: 14px; padding: 10px 20px; margin-top: 15px; border: none; cursor: pointer; }
-        .toast { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); background: white; color: black; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: bold; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 300; }
-        .toast.show { opacity: 1; }
+        
+        /* List */
+        .list-item { padding: 12px 15px; display: flex; align-items: center; border-bottom: 1px solid #222d36; cursor: pointer; }
+        .list-item:hover { background: #202c33; }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; margin-right: 15px; object-fit: cover; background: #333; }
+        .item-info { flex: 1; overflow: hidden; }
+        .item-name { font-size: 16px; font-weight: 500; color: white; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-arrival { animation: fadeIn 0.4s ease-out forwards; }
+        .hidden-file { display: none; }
 
     </style>
 </head>
 <body>
 
-<!-- MAIN APP CONTAINER -->
 <div id="app-container" class="layout-web">
 
-    <!-- Toast & Modal -->
-    <div id="toast" class="toast">Action Completed</div>
+    <!-- Utils -->
+    <div id="toast" style="position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); background: white; color: black; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: bold; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 300;">Action</div>
+    
     <div id="confirm-modal" class="modal-overlay">
         <div class="modal-box">
             <h3 id="modal-title" style="margin-bottom: 10px; color: white;">Confirm</h3>
@@ -245,35 +201,19 @@
         </div>
     </div>
 
-    <!-- 1. HOME SCREEN (WEB VIEW MODE) -->
+    <!-- 1. HOME SCREEN (Web View) -->
     <div id="home-screen" class="screen active animate-arrival">
         <div class="web-content">
             <div class="hero-section">
-                <div class="app-title">NAMASTE</div>
-                <div class="tagline">POWERED BY APNA ADDA</div>
-                <button class="btn-primary" onclick="handleGetStarted()" style="width: auto; padding: 12px 50px; margin-top: 40px; font-size: 18px;">Get Started</button>
+                <div style="font-size: 48px; font-weight: 700; color: var(--primary);">NAMASTE</div>
+                <div style="font-size: 14px; color: var(--text-secondary); margin-top: 5px;">POWERED BY APNA ADDA</div>
+                <button class="btn-primary" onclick="handleGetStarted()" style="width: auto; padding: 12px 50px; margin-top: 40px;">Get Started</button>
             </div>
 
             <div class="highlights-grid">
-                <div class="highlight-card">
-                    <h3><i class="fas fa-lock"></i> Secure</h3>
-                    <p>End-to-end encrypted messaging for total privacy.</p>
-                </div>
-                <div class="highlight-card">
-                    <h3><i class="fas fa-bolt"></i> Fast</h3>
-                    <p>Optimized for speed and minimal data usage.</p>
-                </div>
-                <div class="highlight-card">
-                    <h3><i class="fas fa-camera"></i> Media</h3>
-                    <p>Share high-quality photos seamlessly.</p>
-                </div>
-            </div>
-
-            <div class="about-section">
-                <h3 style="color: white; margin-bottom: 15px;">About Us</h3>
-                <p style="color: #8696a0; font-size: 15px; line-height: 1.8;">
-                    APNA ADDA is a technology-driven company committed to building smart, simple, and useful digital solutions for everyday life. We prioritize user experience and security.
-                </p>
+                <div class="highlight-card"><h3><i class="fas fa-lock"></i> Secure</h3><p>End-to-end encrypted messaging.</p></div>
+                <div class="highlight-card"><h3><i class="fas fa-bolt"></i> Fast</h3><p>Optimized for speed.</p></div>
+                <div class="highlight-card"><h3><i class="fas fa-camera"></i> Media</h3><p>Share photos instantly.</p></div>
             </div>
 
             <div class="web-footer">
@@ -282,18 +222,16 @@
                     <a href="https://t.me/apnaadda_official" target="_blank" class="social-link"><i class="fab fa-telegram"></i> Telegram</a>
                     <a href="https://whatsapp.com/channel/0029Vb7K9Ms3gvWeXnfpLy3x" target="_blank" class="social-link"><i class="fab fa-whatsapp"></i> WhatsApp</a>
                 </div>
-                
-                <button id="back-to-chat-btn" onclick="navigateToApp()" class="btn-secondary" style="display: none; width: auto; margin-bottom: 20px;">BACK TO CHAT AREA</button>
-                
-                <div style="font-size: 11px; color: #666; line-height: 1.6;">
+                <button id="back-to-chat-btn" onclick="navigateToApp()" class="btn-secondary" style="display: none; width: auto; border: 1px solid var(--primary);">BACK TO CHAT AREA</button>
+                <div style="margin-top: 20px; font-size: 11px; color: #666;">
                     DESIGNED BY PREMANSHU KUMAR<br>
-                    <span style="color: var(--primary);">POWERED BY <a href="https://apnaaddatech.github.io/Official_/" target="_blank" style="color: var(--primary); text-decoration: none;">APNA ADDA</a></span>
+                    <span style="color: var(--primary);">POWERED BY <a href="https://apnaaddatech.github.io/Official_/" target="_blank" style="color: inherit; text-decoration: none;">APNA ADDA</a></span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 2. AUTH SCREEN (MOBILE VIEW) -->
+    <!-- 2. AUTH SCREEN -->
     <div id="auth-screen" class="screen">
         <div class="auth-container">
             <h2 style="color: var(--primary); text-align: center; margin-bottom: 30px;">Welcome</h2>
@@ -305,7 +243,7 @@
         </div>
     </div>
 
-    <!-- 3. SETUP SCREEN (MOBILE VIEW) -->
+    <!-- 3. SETUP SCREEN -->
     <div id="setup-screen" class="screen">
         <div class="auth-container">
             <h2 style="text-align: center; margin-bottom: 20px; color: white;">Profile Setup</h2>
@@ -313,14 +251,14 @@
                 <img id="setup-preview" src="" style="width:100%; height:100%; border-radius:50%; object-fit:cover; border:3px solid var(--primary); background:#333;">
             </div>
             <p style="text-align: center; color: #8696a0; font-size: 12px; margin-bottom: 10px;">Select Avatar:</p>
-            <div id="emoji-grid" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 20px; max-height: 150px; overflow-y: auto;"></div>
+            <div id="setup-emoji-grid" class="emoji-selector"></div>
             <input type="text" id="setup-name" placeholder="Display Name">
             <input type="text" id="setup-username" placeholder="Username ID">
             <button class="btn-primary" onclick="saveProfile()">Save & Continue</button>
         </div>
     </div>
 
-    <!-- 4. APP SCREEN (MAIN CHAT DASHBOARD - MOBILE VIEW) -->
+    <!-- 4. APP SCREEN (Mobile View) -->
     <div id="app-screen" class="screen">
         <!-- Header -->
         <div class="app-header">
@@ -338,7 +276,7 @@
             </div>
         </div>
 
-        <!-- Scrollable Content -->
+        <!-- Content -->
         <div id="tab-chats" class="content-area">
             <div id="chat-list-container"></div>
         </div>
@@ -351,9 +289,11 @@
             </div>
         </div>
 
+        <!-- Profile Tab with Edit Option -->
         <div id="tab-profile" class="content-area" style="display: none;">
-            <div style="padding: 30px 20px; text-align: center;">
-                <img id="my-profile-img" style="width: 150px; height: 150px; border-radius: 50%; margin-bottom: 20px; border: 4px solid var(--header-bg);">
+            <!-- View Mode -->
+            <div id="profile-view-div" class="profile-view">
+                <img id="my-profile-img" class="large-dp">
                 <div style="background: #202c33; padding: 15px; border-radius: 10px; text-align: left; margin-bottom: 15px;">
                     <div style="font-size: 12px; color: var(--primary); margin-bottom: 5px;">Name</div>
                     <div style="color: white;" id="my-profile-name"></div>
@@ -362,6 +302,20 @@
                     <div style="font-size: 12px; color: var(--primary); margin-bottom: 5px;">Username</div>
                     <div style="color: white;" id="my-profile-user"></div>
                 </div>
+                <button class="btn-secondary" onclick="toggleEditProfile()">Edit Profile</button>
+            </div>
+            
+            <!-- Edit Mode -->
+            <div id="profile-edit-div" class="profile-view" style="display: none;">
+                <div style="width: 120px; height: 120px; margin: 0 auto 20px;">
+                    <img id="edit-preview" class="large-dp" style="margin:0; width:100%; height:100%;">
+                </div>
+                <p style="font-size:12px; color:#8696a0; margin-bottom:10px;">New Avatar:</p>
+                <div id="edit-emoji-grid" class="emoji-selector"></div>
+                <input type="text" id="edit-name" placeholder="Name">
+                <input type="text" id="edit-username" placeholder="Username (Unique)">
+                <button class="btn-primary" onclick="saveProfileChanges()">Save Changes</button>
+                <button class="btn-secondary" onclick="toggleEditProfile()" style="border-color: #333; color: #999;">Cancel</button>
             </div>
         </div>
 
@@ -378,12 +332,12 @@
         </div>
     </div>
 
-    <!-- 5. CHAT ROOM (OVERLAY) -->
+    <!-- 5. CHAT ROOM (Overlay) -->
     <div id="chat-room" class="screen">
-        <div class="chat-header">
-            <div style="display: flex; align-items: center; gap: 10px; flex: 1; cursor: pointer;" onclick="viewChatProfile()">
+        <div class="app-header">
+            <div class="header-left" onclick="viewChatProfile()">
                 <i class="fas fa-arrow-left" style="color: var(--text-secondary); padding: 5px;" onclick="event.stopPropagation(); closeChat()"></i>
-                <img id="chat-header-img" class="avatar-large" style="width: 35px; height: 35px; margin: 0;">
+                <img id="chat-header-img" class="avatar" style="width: 35px; height: 35px; margin: 0 10px;">
                 <div id="chat-header-name" style="font-weight: 600; color: white;">User</div>
             </div>
             <div class="more-options" onclick="toggleChatMenu(event)">
@@ -395,9 +349,10 @@
             </div>
         </div>
 
-        <div id="messages-container" class="chat-messages"></div>
+        <div id="messages-container" class="chat-bg"></div>
 
-        <div class="chat-input-area">
+        <!-- Chat Input -->
+        <div class="chat-input-bar" id="chat-footer">
             <div class="input-wrapper">
                 <i class="far fa-smile icon-btn"></i>
                 <input type="text" id="message-input" placeholder="Message">
@@ -405,28 +360,33 @@
                 <input type="file" id="file-upload" class="hidden-file" accept="image/*" onchange="handleFileUpload(this)">
                 <i class="fas fa-camera icon-btn" onclick="document.getElementById('file-upload').click()"></i>
             </div>
-            <div style="width: 45px; height: 45px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #111b21; font-size: 18px; cursor: pointer;" onclick="sendMessage()">
-                <i class="fas fa-paper-plane"></i>
+            <div class="mic-btn" onclick="sendMessage()">
+                <i class="fas fa-paper-plane" style="font-size: 18px;"></i>
             </div>
+        </div>
+        
+        <!-- Blocked Message (Hidden by default) -->
+        <div id="blocked-banner" class="blocked-banner">
+            You cannot send messages to this contact.
         </div>
     </div>
 
-    <!-- 6. USER PROFILE VIEW -->
+    <!-- 6. VIEW USER PROFILE -->
     <div id="user-profile-view" class="screen" style="z-index: 60;">
         <div class="app-header">
             <i class="fas fa-arrow-left" style="color: white; cursor: pointer; padding: 10px;" onclick="document.getElementById('user-profile-view').classList.remove('active')"></i>
             <div style="font-weight: 600; font-size: 18px;">Contact Info</div>
             <div style="width: 20px;"></div>
         </div>
-        <div style="padding: 30px 20px; text-align: center;">
-            <img id="view-user-img" style="width: 150px; height: 150px; border-radius: 50%; margin-bottom: 20px;">
+        <div class="profile-view">
+            <img id="view-user-img" class="large-dp">
             <h2 id="view-user-name" style="color: white; margin-bottom: 5px;">Name</h2>
             <p id="view-user-handle" style="color: var(--text-secondary); margin-bottom: 20px;">@username</p>
             <button class="btn-secondary" style="color: var(--danger); border-color: var(--danger);" onclick="blockCurrentUser()">Block Contact</button>
         </div>
     </div>
 
-    <!-- Blocked List -->
+    <!-- Blocked List Screen -->
     <div id="blocked-screen" class="screen">
         <div class="app-header">
             <i class="fas fa-arrow-left" style="color: white; cursor: pointer; padding: 10px;" onclick="document.getElementById('blocked-screen').classList.remove('active')"></i>
@@ -457,10 +417,10 @@
     const auth = firebase.auth();
     const db = firebase.database();
 
-    let currentUser = null, currentChatId = null, currentChatUser = null, isSignup = false, selectedEmoji = "😎", chatListener = null;
+    let currentUser = null, currentUserData = null, currentChatId = null, currentChatUser = null, isSignup = false, selectedEmoji = "😎", chatListener = null;
     const appContainer = document.getElementById('app-container');
 
-    // --- MODE SWITCHING ---
+    // Layout
     function showScreen(name) {
         if(name === 'home') appContainer.className = 'layout-web';
         else appContainer.className = 'layout-mobile';
@@ -472,28 +432,22 @@
         closeAllMenus();
     }
 
-    function toggleHomeFooter() {
-        sessionStorage.setItem('inApp', true);
-        showScreen('home');
-    }
+    function toggleHomeFooter() { sessionStorage.setItem('inApp', true); showScreen('home'); }
+    function navigateToApp() { showScreen('app'); loadChats(); loadMyProfile(); }
 
-    function navigateToApp() {
-        showScreen('app');
-        loadChats();
-    }
-
-    // --- AUTH ---
+    // Auth
     auth.onAuthStateChanged(user => {
         if (user) {
             currentUser = user;
             db.ref('users/' + user.uid).once('value').then(snap => {
                 if (snap.exists()) {
+                    currentUserData = snap.val();
                     document.getElementById('back-to-chat-btn').style.display = 'inline-block';
                     document.getElementById('get-started-btn').innerText = "Enter App";
                     if (!sessionStorage.getItem('onHome')) navigateToApp();
                 } else {
                     showScreen('setup');
-                    initEmojiGrid();
+                    initEmojiGrid('setup-emoji-grid', 'setup-preview');
                 }
             });
         } else {
@@ -503,41 +457,37 @@
         }
     });
 
-    function handleGetStarted() {
-        if(currentUser) navigateToApp();
-        else showScreen('auth');
-    }
-
+    function handleGetStarted() { if(currentUser) navigateToApp(); else showScreen('auth'); }
     function login() {
         const e = document.getElementById('auth-email').value;
         const p = document.getElementById('auth-password').value;
-        if(!e || !p) return showToast("Enter credentials");
         const action = isSignup ? auth.createUserWithEmailAndPassword(e, p) : auth.signInWithEmailAndPassword(e, p);
-        action.then(() => { if(isSignup) { showScreen('setup'); initEmojiGrid(); } else navigateToApp(); })
+        action.then(() => { if(isSignup) { showScreen('setup'); initEmojiGrid('setup-emoji-grid', 'setup-preview'); } })
               .catch(err => document.getElementById('auth-msg').innerText = err.message);
     }
-
     function toggleAuthMode() {
         isSignup = !isSignup;
-        const btn = document.querySelector('#auth-screen .btn-primary');
-        const sec = document.querySelector('#auth-screen .btn-secondary');
-        btn.innerText = isSignup ? "Sign Up" : "Login";
-        sec.innerText = isSignup ? "Back to Login" : "Create Account";
+        document.querySelector('#auth-screen h2').innerText = isSignup ? "Create Account" : "Welcome";
+        document.querySelector('#auth-screen .btn-primary').innerText = isSignup ? "Sign Up" : "Login";
     }
 
-    // --- SETUP ---
-    function initEmojiGrid() {
+    // Profile Logic
+    function initEmojiGrid(gridId, previewId) {
         const emojis = ["😎","🤠","🤓","👽","👻","💩","🤖","🦁","🐯","🐶","🐱","🐼","🦊","🐸","🦄","🔥","⚡","⚽"];
-        const grid = document.getElementById('emoji-grid');
+        const grid = document.getElementById(gridId);
         grid.innerHTML = "";
         emojis.forEach(e => {
-            const d = document.createElement('div');
+            const d = document.createElement('div'); 
             d.className = "emoji-btn"; d.innerText = e;
-            d.style.cssText = "font-size:24px; cursor:pointer; padding:5px; text-align:center;";
-            d.onclick = () => { selectedEmoji = e; document.getElementById('setup-preview').src = generateAvatar(e); };
+            d.onclick = () => { 
+                selectedEmoji = e; 
+                document.getElementById(previewId).src = generateAvatar(e);
+                Array.from(grid.children).forEach(c => c.style.background = 'transparent');
+                d.style.background = '#00a884';
+            };
             grid.appendChild(d);
         });
-        document.getElementById('setup-preview').src = generateAvatar(selectedEmoji);
+        document.getElementById(previewId).src = generateAvatar(selectedEmoji);
     }
 
     function generateAvatar(emoji) {
@@ -559,34 +509,74 @@
             const updates = {};
             updates['users/'+currentUser.uid] = { name, username, photo: dp, uid: currentUser.uid };
             updates['usernames/'+username] = currentUser.uid;
-            db.ref().update(updates).then(navigateToApp);
+            db.ref().update(updates).then(() => { navigateToApp(); loadMyProfile(); });
         });
     }
 
-    // --- CHAT LOGIC ---
+    // Edit Profile
+    function toggleEditProfile() {
+        const v = document.getElementById('profile-view-div');
+        const e = document.getElementById('profile-edit-div');
+        if(v.style.display === 'none') { v.style.display = 'block'; e.style.display = 'none'; }
+        else { 
+            v.style.display = 'none'; e.style.display = 'block'; 
+            initEmojiGrid('edit-emoji-grid', 'edit-preview');
+            document.getElementById('edit-name').value = currentUserData.name;
+            document.getElementById('edit-username').value = currentUserData.username;
+            document.getElementById('edit-preview').src = currentUserData.photo;
+        }
+    }
+
+    function saveProfileChanges() {
+        const n = document.getElementById('edit-name').value;
+        const u = document.getElementById('edit-username').value.toLowerCase().replace(/\s/g,'');
+        if(!n || !u) return showToast("Fields empty");
+        
+        const update = () => {
+            const dp = generateAvatar(selectedEmoji);
+            const updates = { ['users/'+currentUser.uid+'/name']: n, ['users/'+currentUser.uid+'/photo']: dp };
+            if(u !== currentUserData.username) {
+                updates['users/'+currentUser.uid+'/username'] = u;
+                updates['usernames/'+currentUserData.username] = null;
+                updates['usernames/'+u] = currentUser.uid;
+            }
+            db.ref().update(updates).then(() => { showToast("Updated"); loadMyProfile(); toggleEditProfile(); });
+        };
+
+        if(u !== currentUserData.username) {
+            db.ref('usernames/'+u).once('value').then(s => { if(s.exists()) showToast("Username taken"); else update(); });
+        } else update();
+    }
+
+    function loadMyProfile() {
+        db.ref('users/'+currentUser.uid).once('value').then(s => {
+            currentUserData = s.val();
+            document.getElementById('my-profile-img').src = currentUserData.photo;
+            document.getElementById('my-profile-name').innerText = currentUserData.name;
+            document.getElementById('my-profile-user').innerText = "@"+currentUserData.username;
+        });
+    }
+
+    // Chat
     function switchTab(tab, el) {
         document.querySelectorAll('.content-area').forEach(c => c.style.display = 'none');
         document.getElementById('tab-' + tab).style.display = 'block';
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         el.classList.add('active');
         if(tab === 'chats') loadChats();
-        if(tab === 'profile') loadMyProfile();
     }
 
     function loadChats() {
-        const cont = document.getElementById('chat-list-container');
-        cont.innerHTML = "";
+        const cont = document.getElementById('chat-list-container'); cont.innerHTML = "";
         db.ref('userChats/'+currentUser.uid).on('value', snap => {
             cont.innerHTML = "";
-            if(!snap.exists()) { cont.innerHTML="<p style='text-align:center;color:#8696a0;padding:20px'>No chats</p>"; return; }
+            if(!snap.exists()) { cont.innerHTML="<p style='text-align:center;color:#8696a0;padding:20px'>No chats yet</p>"; return; }
             snap.forEach(c => {
                 const chat = c.val();
                 db.ref('users/'+chat.withUser).once('value').then(uSnap => {
-                    const u = uSnap.val();
-                    if(!u) return;
-                    const div = document.createElement('div');
-                    div.className = "list-item";
-                    div.innerHTML = `<img src="${u.photo}" class="avatar-large"><div class="item-info"><div class="item-name">${u.name}</div><div class="item-sub">${chat.lastMsg}</div></div>`;
+                    const u = uSnap.val(); if(!u) return;
+                    const div = document.createElement('div'); div.className = "list-item";
+                    div.innerHTML = `<img src="${u.photo}" class="avatar"><div class="item-info"><div class="item-name">${u.name}</div><div class="item-sub">${chat.lastMsg}</div></div>`;
                     div.onclick = () => openChat(u);
                     cont.appendChild(div);
                 });
@@ -602,74 +592,71 @@
         document.getElementById('chat-header-name').innerText = user.name;
         document.getElementById('chat-header-img').src = user.photo;
         document.getElementById('messages-container').innerHTML = "";
+        
+        // Blocking Logic
+        db.ref(`users/${user.uid}/blocked`).orderByValue().equalTo(currentUser.uid).once('value').then(snap => {
+            const footer = document.getElementById('chat-footer');
+            const banner = document.getElementById('blocked-banner');
+            if (snap.exists()) { footer.style.display = 'none'; banner.style.display = 'block'; banner.innerText = "You have been blocked by this contact."; } 
+            else { 
+                // Check if I blocked them
+                db.ref(`users/${currentUser.uid}/blocked`).orderByValue().equalTo(user.uid).once('value').then(s => {
+                    if(s.exists()) { footer.style.display = 'none'; banner.style.display = 'block'; banner.innerText = "You blocked this contact."; }
+                    else { footer.style.display = 'flex'; banner.style.display = 'none'; }
+                });
+            }
+        });
+
         chatListener = db.ref('chats/'+currentChatId+'/messages').on('child_added', s => appendMessage(s.val()));
     }
 
     function appendMessage(msg) {
         const cont = document.getElementById('messages-container');
         const div = document.createElement('div');
-        const isMe = msg.sender === currentUser.uid;
-        div.className = `message ${isMe ? 'sent' : 'received'}`;
+        div.className = `message ${msg.sender === currentUser.uid ? 'sent' : 'received'}`;
         let content = msg.text;
         if(msg.type === 'image') content = `<img src="${msg.text}" class="msg-img">`;
-        div.innerHTML = `${content}<span class="msg-time">${new Date(msg.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</span>`;
-        cont.appendChild(div);
-        cont.scrollTop = cont.scrollHeight;
+        div.innerHTML = `${content}<div class="msg-time">${new Date(msg.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>`;
+        cont.appendChild(div); cont.scrollTop = cont.scrollHeight;
     }
 
     function sendMessage() {
         const t = document.getElementById('message-input').value.trim();
-        if(!t) return;
-        sendDb(t, 'text');
-        document.getElementById('message-input').value = "";
+        if(t) { sendDb(t, 'text'); document.getElementById('message-input').value = ""; }
     }
-
     function handleFileUpload(inp) {
         const f = inp.files[0];
-        if(!f) return;
-        const r = new FileReader();
-        r.onload = e => sendDb(e.target.result, 'image');
-        r.readAsDataURL(f);
+        if(f) { const r = new FileReader(); r.onload = e => sendDb(e.target.result, 'image'); r.readAsDataURL(f); }
+    }
+    function sendDb(content, type) {
+        const msg = { sender: currentUser.uid, text: content, type, timestamp: Date.now() };
+        db.ref('chats/'+currentChatId+'/messages').push(msg);
+        const updates = {};
+        const txt = type === 'image' ? 'Photo' : content;
+        updates[`userChats/${currentUser.uid}/${currentChatId}`] = { withUser: currentChatUser.uid, lastMsg: "You: "+txt, time: Date.now() };
+        updates[`userChats/${currentChatUser.uid}/${currentChatId}`] = { withUser: currentUser.uid, lastMsg: txt, time: Date.now() };
+        db.ref().update(updates);
     }
 
-    function sendDb(content, type) {
-        db.ref(`users/${currentChatUser.uid}/blocked`).once('value').then(s => {
-            if(s.exists() && Object.values(s.val()).includes(currentUser.uid)) return showToast("Blocked");
-            db.ref('chats/'+currentChatId+'/messages').push({ sender: currentUser.uid, text: content, type, timestamp: Date.now() });
-            const prev = type === 'image' ? 'Photo' : content;
-            const up = {};
-            up[`userChats/${currentUser.uid}/${currentChatId}`] = { withUser: currentChatUser.uid, lastMsg: "You: "+prev, time: Date.now() };
-            up[`userChats/${currentChatUser.uid}/${currentChatId}`] = { withUser: currentUser.uid, lastMsg: prev, time: Date.now() };
-            db.ref().update(up);
+    // Blocking & Utils
+    function blockCurrentUser() {
+        showModal("Block User", "Block this contact?", () => {
+            db.ref(`users/${currentUser.uid}/blocked`).push(currentChatUser.uid);
+            document.getElementById('chat-footer').style.display='none';
+            document.getElementById('blocked-banner').style.display='block';
+            document.getElementById('blocked-banner').innerText = "You blocked this contact.";
+            showToast("Blocked");
         });
     }
-
-    function closeChat() {
-        document.getElementById('chat-room').classList.remove('active');
-        if(currentChatId && chatListener) db.ref('chats/'+currentChatId+'/messages').off('child_added', chatListener);
-        currentChatId = null; chatListener = null;
-    }
-
-    // --- UI HELPERS ---
-    function toggleMenu(e) { e.stopPropagation(); document.getElementById('main-menu').classList.toggle('show'); }
-    function toggleChatMenu(e) { e.stopPropagation(); document.getElementById('chat-menu').classList.toggle('show'); }
-    function closeAllMenus() { document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show')); }
-    window.onclick = () => closeAllMenus();
-
-    function confirmLogout() {
-        showModal("Log Out", "Are you sure?", () => { auth.signOut(); sessionStorage.clear(); window.location.reload(); });
-    }
-
     function showBlockedUsers() {
         document.getElementById('blocked-screen').classList.add('active');
-        const list = document.getElementById('blocked-list');
-        list.innerHTML = "";
+        const list = document.getElementById('blocked-list'); list.innerHTML = "";
         db.ref(`users/${currentUser.uid}/blocked`).once('value').then(s => {
-            if(!s.exists()) { list.innerHTML="<p style='text-align:center;color:#8696a0;padding:20px'>Empty</p>"; return; }
+            if(!s.exists()) { list.innerHTML="<p style='text-align:center;padding:20px;color:#8696a0'>Empty</p>"; return; }
             s.forEach(i => {
                 db.ref('users/'+i.val()).once('value').then(u => {
                     const d = document.createElement('div'); d.className="list-item";
-                    d.innerHTML = `<img src="${u.val().photo}" class="avatar-large"><div class="item-name">${u.val().name}</div>`;
+                    d.innerHTML = `<img src="${u.val().photo}" class="avatar"><div class="item-name">${u.val().name}</div>`;
                     d.onclick = () => { i.ref.remove(); d.remove(); showToast("Unblocked"); };
                     list.appendChild(d);
                 });
@@ -677,23 +664,10 @@
         });
     }
 
-    function blockCurrentUser() {
-        showModal("Block User", "Block this contact?", () => {
-            db.ref(`users/${currentUser.uid}/blocked`).push(currentChatUser.uid);
-            showToast("Blocked"); closeChat();
-        });
-    }
-
-    function confirmDeleteChat() {
-        showModal("Delete Chat", "Clear messages?", () => {
-            db.ref(`userChats/${currentUser.uid}/${currentChatId}`).remove();
-            closeChat(); showToast("Deleted");
-        });
-    }
-
     function searchUser() {
-        const q = document.getElementById('search-input').value.toLowerCase();
+        const q = document.getElementById('search-input').value.toLowerCase().trim();
         const res = document.getElementById('search-result');
+        if(!q) return;
         res.innerHTML = "Searching...";
         db.ref('usernames/'+q).once('value').then(snap => {
             if(!snap.exists()) return res.innerHTML="<p style='color:#8696a0'>Not Found</p>";
@@ -701,7 +675,7 @@
             if(uid === currentUser.uid) return res.innerHTML="<p style='color:#8696a0'>That's you</p>";
             db.ref('users/'+uid).once('value').then(u => {
                 const usr = u.val();
-                res.innerHTML = `<div class="list-item"><img src="${usr.photo}" class="avatar-large"><div class="item-name">${usr.name}</div></div>`;
+                res.innerHTML = `<div class="list-item"><img src="${usr.photo}" class="avatar"><div class="item-name">${usr.name}</div></div>`;
                 res.firstChild.onclick = () => { openChat(usr); document.getElementById('search-input').value=""; res.innerHTML=""; };
             });
         });
@@ -714,22 +688,20 @@
         document.getElementById('user-profile-view').classList.add('active');
     }
 
-    function loadMyProfile() {
-        db.ref('users/'+currentUser.uid).once('value').then(s => {
-            document.getElementById('my-profile-img').src = s.val().photo;
-            document.getElementById('my-profile-name').innerText = s.val().name;
-            document.getElementById('my-profile-user').innerText = "@"+s.val().username;
-        });
-    }
-
+    // System
+    function toggleMenu(e) { e.stopPropagation(); document.getElementById('main-menu').classList.toggle('show'); }
+    function toggleChatMenu(e) { e.stopPropagation(); document.getElementById('chat-menu').classList.toggle('show'); }
+    function closeAllMenus() { document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show')); }
+    window.onclick = () => closeAllMenus();
+    function closeChat() { document.getElementById('chat-room').classList.remove('active'); if(chatListener) db.ref('chats/'+currentChatId+'/messages').off('child_added', chatListener); }
+    function confirmLogout() { showModal("Log Out", "Are you sure?", () => { auth.signOut(); sessionStorage.clear(); window.location.reload(); }); }
+    function confirmDeleteChat() { showModal("Delete Chat", "Clear messages?", () => { db.ref(`userChats/${currentUser.uid}/${currentChatId}`).remove(); closeChat(); }); }
+    
     let confirmAction = null;
-    function showModal(t, txt, cb) {
-        document.getElementById('modal-title').innerText=t; document.getElementById('modal-text').innerText=txt;
-        document.getElementById('confirm-modal').style.display='flex'; confirmAction=cb;
-    }
+    function showModal(t, txt, cb) { document.getElementById('modal-title').innerText=t; document.getElementById('modal-text').innerText=txt; document.getElementById('confirm-modal').style.display='flex'; confirmAction=cb; }
     function closeModal() { document.getElementById('confirm-modal').style.display='none'; confirmAction=null; }
     document.getElementById('modal-confirm-btn').onclick = () => { if(confirmAction) confirmAction(); closeModal(); };
-    function showToast(m) { const t=document.getElementById('toast'); t.innerText=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
+    function showToast(m) { const t=document.getElementById('toast'); t.innerText=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
 
 </script>
 </body>
