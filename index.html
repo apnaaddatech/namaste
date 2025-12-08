@@ -13,12 +13,12 @@
 
     <style>
         :root {
-            /* WhatsApp Dark Theme Colors */
-            --bg-color: #0b141a;       /* Main Background */
-            --header-bg: #202c33;      /* Header & Footer */
-            --sent-bg: #005c4b;        /* Sent Bubble */
-            --received-bg: #202c33;    /* Received Bubble */
-            --primary: #00a884;        /* Green Accent */
+            /* Theme Colors */
+            --bg-color: #0b141a;       
+            --header-bg: #202c33;      
+            --sent-bg: #005c4b;        
+            --received-bg: #202c33;    
+            --primary: #00a884;        
             --text-primary: #e9edef;
             --text-secondary: #8696a0;
             --danger: #ef5350;
@@ -44,11 +44,11 @@
             overflow: hidden; 
         }
 
-        /* --- Animations --- */
+        /* Animations */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-arrival { animation: fadeIn 0.3s ease-out forwards; }
 
-        /* --- Main Container --- */
+        /* Main Container */
         #app-container {
             background-color: var(--bg-color);
             position: relative;
@@ -60,7 +60,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Desktop Constraint */
         @media (min-width: 501px) {
             #app-container {
                 max-width: 450px;
@@ -72,10 +71,8 @@
             }
         }
 
-        /* --- Common UI --- */
+        /* Common UI */
         button { cursor: pointer; border: none; outline: none; }
-        
-        /* Input Styles */
         input[type="text"], input[type="email"], input[type="password"] {
             width: 100%; padding: 12px; 
             background: #2a3942; border: none; 
@@ -93,11 +90,11 @@
             padding: 10px; border-radius: 25px; font-weight: 500; width: 100%; margin-top: 10px;
         }
 
-        /* --- Screens --- */
+        /* Screens */
         .screen { display: none; flex-direction: column; height: 100%; width: 100%; background: var(--bg-color); position: absolute; inset: 0; z-index: 10; }
         .screen.active { display: flex; }
 
-        /* --- Header --- */
+        /* --- Header Styling --- */
         .app-header { 
             padding: 10px 15px;
             padding-top: max(10px, var(--safe-top));
@@ -105,29 +102,39 @@
             display: flex; align-items: center; justify-content: space-between;
             box-shadow: 0 1px 3px rgba(0,0,0,0.2); z-index: 20; flex-shrink: 0;
         }
-        .header-left { display: flex; align-items: center; gap: 10px; flex: 1; overflow: hidden; cursor: pointer; }
-        .header-title { font-size: 18px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .header-subtitle { font-size: 11px; color: var(--text-secondary); }
-        .header-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
         
-        .header-right { display: flex; gap: 15px; color: var(--text-primary); font-size: 18px; }
-        .more-options { position: relative; padding: 5px; cursor: pointer; }
+        /* Left side: Back + Avatar + Name (Clickable) */
+        .header-left { 
+            display: flex; align-items: center; gap: 12px; flex: 1; 
+            overflow: hidden; cursor: pointer; border-radius: 10px;
+            padding: 5px 0;
+        }
+        .header-left:active { background: rgba(255,255,255,0.05); }
 
+        .back-btn { padding: 5px 10px 5px 0; font-size: 18px; color: var(--text-secondary); }
+        .header-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: #333; }
+        .header-title { font-size: 17px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* Right side: Menu */
+        .header-right { display: flex; align-items: center; }
+        .more-options { position: relative; padding: 10px; cursor: pointer; color: var(--text-primary); }
+
+        /* Dropdown Menu */
         .dropdown-menu { 
-            position: absolute; right: 0; top: 40px; 
+            position: absolute; right: 5px; top: 40px; 
             background: #233138; border-radius: 6px; 
-            width: 180px; display: none; 
+            width: 160px; display: none; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 100; 
             padding: 5px 0;
         }
-        .dropdown-menu.show { display: block; }
+        .dropdown-menu.show { display: block; animation: fadeIn 0.2s; }
         .dropdown-item { padding: 12px 20px; font-size: 14px; cursor: pointer; color: var(--text-primary); }
         .dropdown-item:hover { background: #182229; }
 
-        /* --- Content Area --- */
+        /* Content Area */
         .content-area { flex: 1; overflow-y: auto; position: relative; -webkit-overflow-scrolling: touch; }
 
-        /* --- List Items --- */
+        /* List Items */
         .list-item { 
             padding: 12px 15px; display: flex; align-items: center; 
             border-bottom: 1px solid #222d36; cursor: pointer; transition: background 0.2s;
@@ -139,7 +146,7 @@
         .item-sub { font-size: 13px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .item-meta { font-size: 11px; color: #667781; }
 
-        /* --- Footer (Main App) --- */
+        /* Main Footer */
         .main-footer {
             background: var(--header-bg); border-top: 1px solid #222d36;
             padding: 10px 0; padding-bottom: max(10px, var(--safe-bottom));
@@ -147,17 +154,17 @@
         }
         .nav-icons { display: flex; width: 100%; justify-content: space-around; margin-bottom: 5px; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); cursor: pointer; flex: 1; }
-        .nav-item i { font-size: 22px; margin-bottom: 2px; }
-        .nav-item span { font-size: 11px; }
+        .nav-item i { font-size: 24px; margin-bottom: 2px; }
+        .nav-item span { font-size: 12px; }
         .nav-item.active { color: var(--primary); }
-        .powered-by { font-size: 9px; color: #555; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .powered-by { font-size: 10px; color: #555; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
         .powered-by a { color: #667781; text-decoration: none; font-weight: bold; }
 
-        /* --- Chat Room UI (WhatsApp Style) --- */
+        /* Chat Room UI */
         #chat-room { z-index: 50; }
         .chat-bg {
             flex: 1;
-            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); /* WhatsApp Doodle */
+            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');
             background-color: #0b141a;
             background-blend-mode: overlay;
             padding: 15px;
@@ -166,51 +173,24 @@
         }
 
         .message {
-            max-width: 75%;
-            padding: 6px 10px;
-            padding-bottom: 20px; /* Space for time */
-            border-radius: 8px;
-            font-size: 14.2px;
-            line-height: 19px;
-            position: relative;
-            word-wrap: break-word;
-            box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+            max-width: 75%; padding: 6px 10px; padding-bottom: 20px;
+            border-radius: 8px; font-size: 14.2px; line-height: 19px;
+            position: relative; word-wrap: break-word; box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
         }
-
-        .message.sent {
-            align-self: flex-end;
-            background: var(--sent-bg);
-            border-top-right-radius: 0;
-        }
-        /* Triangle for Sent */
+        .message.sent { align-self: flex-end; background: var(--sent-bg); border-top-right-radius: 0; }
         .message.sent::after {
-            content: ""; position: absolute; top: 0; right: -8px;
-            width: 0; height: 0;
-            border-top: 8px solid var(--sent-bg);
-            border-right: 8px solid transparent;
+            content: ""; position: absolute; top: 0; right: -8px; width: 0; height: 0;
+            border-top: 8px solid var(--sent-bg); border-right: 8px solid transparent;
         }
-
-        .message.received {
-            align-self: flex-start;
-            background: var(--received-bg);
-            border-top-left-radius: 0;
-        }
-        /* Triangle for Received */
+        .message.received { align-self: flex-start; background: var(--received-bg); border-top-left-radius: 0; }
         .message.received::after {
-            content: ""; position: absolute; top: 0; left: -8px;
-            width: 0; height: 0;
-            border-top: 8px solid var(--received-bg);
-            border-left: 8px solid transparent;
+            content: ""; position: absolute; top: 0; left: -8px; width: 0; height: 0;
+            border-top: 8px solid var(--received-bg); border-left: 8px solid transparent;
         }
-
-        .msg-time {
-            position: absolute; bottom: 3px; right: 7px;
-            font-size: 10px; color: rgba(255,255,255,0.6);
-            display: flex; align-items: center; gap: 3px;
-        }
+        .msg-time { position: absolute; bottom: 3px; right: 7px; font-size: 10px; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 3px; }
         .msg-img { max-width: 100%; border-radius: 6px; margin-bottom: 5px; display: block; }
 
-        /* Input Bar */
+        /* Chat Input */
         .chat-input-bar {
             display: flex; align-items: flex-end; gap: 8px;
             padding: 8px 10px; padding-bottom: max(8px, var(--safe-bottom));
@@ -221,38 +201,31 @@
             display: flex; align-items: center; padding: 0 10px; min-height: 45px;
         }
         .icon-btn { font-size: 22px; color: #8696a0; padding: 8px; cursor: pointer; }
-        .icon-btn:hover { color: #cfd7db; }
-        
         #message-input {
             flex: 1; background: transparent; border: none; outline: none;
             color: white; font-size: 15px; padding: 10px 5px; margin: 0;
             max-height: 100px; overflow-y: auto;
         }
-
         .mic-btn {
             width: 45px; height: 45px; background: var(--primary);
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: #111b21; font-size: 20px; flex-shrink: 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            color: #111b21; font-size: 20px; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
-        /* --- Profile View --- */
+        /* Profile View */
         .profile-view { padding: 30px 20px; text-align: center; }
         .large-dp { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 4px solid var(--header-bg); }
         .profile-field { background: #202c33; padding: 15px; border-radius: 10px; text-align: left; margin-bottom: 15px; }
         .field-label { font-size: 12px; color: var(--primary); margin-bottom: 5px; }
         .field-value { font-size: 16px; color: var(--text-primary); }
 
-        /* --- Modals & Toasts --- */
+        /* Modals & Toast */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; display: none; justify-content: center; align-items: center; }
         .modal-box { background: #3b4a54; padding: 25px; border-radius: 15px; width: 85%; max-width: 320px; text-align: center; color: white; }
         .modal-actions { margin-top: 20px; display: flex; gap: 15px; justify-content: flex-end; }
         .modal-btn { background: transparent; color: var(--primary); font-weight: 600; font-size: 14px; padding: 8px 15px; }
-        
         .toast { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.9); color: black; padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 500; opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 200; }
         .toast.show { opacity: 1; }
-
-        /* File Input */
         .hidden-file { display: none; }
 
     </style>
@@ -304,7 +277,7 @@
 
     <!-- 2. AUTH SCREEN -->
     <div id="auth-screen" class="screen">
-        <div class="auth-container">
+        <div class="auth-container" style="padding: 30px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
             <h2 style="color: var(--primary); text-align: center; margin-bottom: 30px;">Welcome</h2>
             <input type="email" id="auth-email" placeholder="Email">
             <input type="password" id="auth-password" placeholder="Password">
@@ -316,7 +289,7 @@
 
     <!-- 3. SETUP SCREEN -->
     <div id="setup-screen" class="screen">
-        <div class="auth-container">
+        <div class="auth-container" style="padding: 30px; display: flex; flex-direction: column; justify-content: center; height: 100%;">
             <h2 style="text-align: center; margin-bottom: 20px;">Profile Info</h2>
             <div style="text-align: center; margin-bottom: 20px;">
                 <img id="setup-preview" src="https://via.placeholder.com/150" class="large-dp" style="margin: 0 auto; display: block;">
@@ -370,7 +343,7 @@
                     <div class="field-label">Username</div>
                     <div class="field-value" id="my-profile-user"></div>
                 </div>
-                <button class="btn-secondary" onclick="enableEditMode()">Edit Profile</button>
+                <button class="btn-secondary" onclick="showToast('Profile editing coming soon')">Edit Profile</button>
             </div>
         </div>
 
@@ -385,20 +358,25 @@
         </div>
     </div>
 
-    <!-- 5. CHAT ROOM (Overlay) -->
+    <!-- 5. CHAT ROOM (Overlay) - Clean Interface -->
     <div id="chat-room" class="screen">
+        <!-- Clean Header -->
         <div class="app-header">
+            <!-- Left Group: Back + Avatar + Name -> Opens Profile -->
             <div class="header-left" onclick="viewChatProfile()">
-                <i class="fas fa-arrow-left" style="padding: 10px; margin-left: -10px;" onclick="event.stopPropagation(); closeChat()"></i>
+                <i class="fas fa-arrow-left back-btn" onclick="event.stopPropagation(); closeChat()"></i>
                 <img id="chat-header-img" class="header-avatar" src="">
-                <div class="header-title" id="chat-header-name" style="font-size: 16px; margin-left: 5px;">User</div>
+                <div class="header-title" id="chat-header-name">User</div>
             </div>
+            
+            <!-- Right Group: Just the Menu -->
             <div class="header-right">
-                <i class="fas fa-ellipsis-v more-options" onclick="toggleChatMenu(event)"></i>
-                <div class="dropdown-menu" id="chat-menu" style="top: 50px; right: 10px;">
-                    <div class="dropdown-item" onclick="viewChatProfile()">View Profile</div>
-                    <div class="dropdown-item" onclick="blockCurrentUser()">Block User</div>
-                    <div class="dropdown-item" style="color: var(--danger);" onclick="confirmDeleteChat()">Delete Chat</div>
+                <div class="more-options" onclick="toggleChatMenu(event)">
+                    <i class="fas fa-ellipsis-v"></i>
+                    <div class="dropdown-menu" id="chat-menu">
+                        <div class="dropdown-item" onclick="blockCurrentUser()">Block User</div>
+                        <div class="dropdown-item" style="color: var(--danger);" onclick="confirmDeleteChat()">Delete Chat</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -425,7 +403,7 @@
     <!-- 6. VIEW USER PROFILE OVERLAY -->
     <div id="user-profile-view" class="screen" style="z-index: 60;">
         <div class="app-header">
-            <i class="fas fa-arrow-left" style="color: white; padding: 10px; cursor: pointer;" onclick="document.getElementById('user-profile-view').classList.remove('active')"></i>
+            <i class="fas fa-arrow-left back-btn" style="padding: 10px;" onclick="document.getElementById('user-profile-view').classList.remove('active')"></i>
             <div class="header-title">Contact Info</div>
             <div style="width: 20px;"></div>
         </div>
@@ -444,7 +422,7 @@
     <!-- Blocked List Screen -->
     <div id="blocked-screen" class="screen">
         <div class="app-header">
-            <i class="fas fa-arrow-left" style="padding: 10px; cursor: pointer;" onclick="document.getElementById('blocked-screen').classList.remove('active')"></i>
+            <i class="fas fa-arrow-left back-btn" style="padding: 10px;" onclick="document.getElementById('blocked-screen').classList.remove('active')"></i>
             <div class="header-title">Blocked Contacts</div>
             <div></div>
         </div>
@@ -479,7 +457,7 @@
     let currentChatId = null;
     let isSignup = false;
     let selectedEmoji = "😎";
-    let chatListener = null; // To prevent duplicate listeners
+    let chatListener = null;
 
     // --- DOM REFERENCES ---
     const screens = {
@@ -493,16 +471,11 @@
 
     // --- NAVIGATION ---
     function showScreen(name) {
-        // Toggle web/mobile layout
         if(name === 'home') appContainer.className = 'layout-web';
         else appContainer.className = 'layout-mobile';
 
-        // Hide all screens
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        // Show target
         screens[name].classList.add('active');
-        
-        // Reset Menus
         closeAllMenus();
     }
 
@@ -517,14 +490,13 @@
         if(tab === 'profile') loadMyProfile();
     }
 
-    // --- AUTH LOGIC ---
+    // --- AUTH ---
     auth.onAuthStateChanged(user => {
         if (user) {
             currentUser = user;
             db.ref('users/' + user.uid).once('value').then(snap => {
                 if (snap.exists()) {
                     if (!sessionStorage.getItem('inApp')) {
-                        // User exists, go to app
                         showScreen('app');
                         loadChats();
                     }
@@ -535,7 +507,6 @@
             });
         } else {
             currentUser = null;
-            // Stay on Home or Auth
         }
     });
 
@@ -566,13 +537,12 @@
         const btn = document.querySelector('#auth-screen .btn-primary');
         const sec = document.querySelector('#auth-screen .btn-secondary');
         const tit = document.querySelector('#auth-screen .app-title');
-        
         btn.innerText = isSignup ? "Sign Up" : "Login";
         sec.innerText = isSignup ? "Back to Login" : "Create Account";
         tit.innerText = isSignup ? "Create Account" : "NAMASTE";
     }
 
-    // --- PROFILE SETUP ---
+    // --- PROFILE ---
     function initEmojiGrid() {
         const emojis = ["😎","🤠","🤓","👽","👻","💩","🤖","🦁","🐯","🐶","🐱","🐼","🦊","🐸","🦄","🔥","⚡","⚽"];
         const grid = document.getElementById('emoji-grid');
@@ -617,24 +587,19 @@
         });
     }
 
-    // --- CHAT LOGIC (Core Fixes) ---
+    // --- CHAT LOGIC ---
     function loadChats() {
         const cont = document.getElementById('chat-list-container');
         cont.innerHTML = "";
-        
         db.ref('userChats/'+currentUser.uid).on('value', snap => {
-            cont.innerHTML = ""; // Clear to prevent duplicates on update
+            cont.innerHTML = "";
             if(!snap.exists()) { cont.innerHTML = "<p style='text-align:center; color:#8696a0; margin-top:20px;'>No chats yet</p>"; return; }
-            
             snap.forEach(c => {
                 const chat = c.val();
-                const chatId = c.key;
                 db.ref('users/'+chat.withUser).once('value').then(uSnap => {
                     const u = uSnap.val();
                     if(!u) return;
-                    
                     const time = new Date(chat.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-                    
                     const div = document.createElement('div');
                     div.className = "list-item";
                     div.innerHTML = `
@@ -653,22 +618,17 @@
     }
 
     function openChat(user) {
-        // 1. Clean up previous
         if(currentChatId && chatListener) {
             db.ref('chats/'+currentChatId+'/messages').off('child_added', chatListener);
         }
-        
         currentChatUser = user;
-        // Generate Chat ID (Lexical Sort)
         currentChatId = currentUser.uid < user.uid ? currentUser.uid + "_" + user.uid : user.uid + "_" + currentUser.uid;
         
-        // 2. Setup UI
         document.getElementById('chat-room').classList.add('active');
         document.getElementById('chat-header-name').innerText = user.name;
         document.getElementById('chat-header-img').src = user.photo;
-        document.getElementById('messages-container').innerHTML = ""; // Clear OLD messages
+        document.getElementById('messages-container').innerHTML = "";
         
-        // 3. Attach New Listener
         const msgRef = db.ref('chats/'+currentChatId+'/messages');
         chatListener = msgRef.on('child_added', snapshot => {
             appendMessage(snapshot.val());
@@ -679,27 +639,11 @@
         const cont = document.getElementById('messages-container');
         const div = document.createElement('div');
         const isMe = msg.sender === currentUser.uid;
-        
         div.className = `message ${isMe ? 'sent' : 'received'}`;
-        
         let content = msg.text;
         if(msg.type === 'image') content = `<img src="${msg.text}" class="msg-img">`;
-        
         const time = new Date(msg.timestamp).toLocaleTimeString([],{hour:'2-digit', minute:'2-digit'});
-        
-        div.innerHTML = `
-            ${content}
-            <div class="msg-time">
-                ${time} 
-                ${isMe ? '<i class="fas fa-check-double" style="color: #53bdeb;"></i>' : ''}
-            </div>
-        `;
-        
-        // Double click to delete (Simple feature)
-        div.ondblclick = () => {
-            if(isMe) showToast("Message deletion not synced in this demo");
-        };
-
+        div.innerHTML = `${content}<div class="msg-time">${time} ${isMe ? '<i class="fas fa-check-double" style="color:#53bdeb;"></i>' : ''}</div>`;
         cont.appendChild(div);
         cont.scrollTop = cont.scrollHeight;
     }
@@ -708,7 +652,6 @@
         const inp = document.getElementById('message-input');
         const text = inp.value.trim();
         if(!text) return;
-        
         sendToDb(text, 'text');
         inp.value = "";
     }
@@ -716,32 +659,19 @@
     function handleFileUpload(input) {
         const file = input.files[0];
         if(!file) return;
-        
         const reader = new FileReader();
-        reader.onload = e => {
-            sendToDb(e.target.result, 'image');
-        };
+        reader.onload = e => { sendToDb(e.target.result, 'image'); };
         reader.readAsDataURL(file);
     }
 
     function sendToDb(content, type) {
-        // Check block
         db.ref(`users/${currentChatUser.uid}/blocked`).once('value').then(snap => {
             if(snap.exists()) {
                 const blocks = Object.values(snap.val());
                 if(blocks.includes(currentUser.uid)) return showToast("You cannot message this user");
             }
-            
-            const msgData = {
-                sender: currentUser.uid,
-                text: content,
-                type: type,
-                timestamp: Date.now()
-            };
-            
+            const msgData = { sender: currentUser.uid, text: content, type: type, timestamp: Date.now() };
             db.ref('chats/'+currentChatId+'/messages').push(msgData);
-            
-            // Update Lists
             const lastMsg = type === 'image' ? '📷 Photo' : content;
             const updates = {};
             updates[`userChats/${currentUser.uid}/${currentChatId}`] = { withUser: currentChatUser.uid, lastMsg: "You: " + lastMsg, time: Date.now() };
@@ -759,7 +689,7 @@
         chatListener = null;
     }
 
-    // --- MENU & FEATURES ---
+    // --- MENU ---
     function toggleMenu(e) { e.stopPropagation(); document.getElementById('main-menu').classList.toggle('show'); }
     function toggleChatMenu(e) { e.stopPropagation(); document.getElementById('chat-menu').classList.toggle('show'); }
     function closeAllMenus() { document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('show')); }
@@ -769,14 +699,11 @@
         const q = document.getElementById('search-input').value.toLowerCase().trim();
         const res = document.getElementById('search-result');
         if(!q) return;
-        
         res.innerHTML = "Searching...";
         db.ref('usernames/'+q).once('value').then(snap => {
             if(!snap.exists()) return res.innerHTML = "<p style='color:#8696a0'>User not found</p>";
-            
             const uid = snap.val();
             if(uid === currentUser.uid) return res.innerHTML = "<p style='color:#8696a0'>You cannot message yourself</p>";
-            
             db.ref('users/'+uid).once('value').then(uSnap => {
                 const u = uSnap.val();
                 res.innerHTML = `
@@ -797,7 +724,7 @@
         });
     }
 
-    // --- Block / Delete ---
+    // --- ACTIONS ---
     let confirmAction = null;
     function showModal(title, text, cb) {
         document.getElementById('modal-title').innerText = title;
@@ -818,9 +745,7 @@
 
     function confirmDeleteChat() {
         showModal("Delete Chat", "Clear all messages?", () => {
-            db.ref(`userChats/${currentUser.uid}/${currentChatId}`).remove(); // Remove from list
-            // Optionally remove actual messages if you want to delete for both (not typical)
-            // For now, removing from list hides it.
+            db.ref(`userChats/${currentUser.uid}/${currentChatId}`).remove();
             closeChat();
             showToast("Chat Cleared");
         });
@@ -835,8 +760,7 @@
     }
 
     function showBlockedUsers() {
-        showScreen('blocked-screen'); // You need to implement this screen logic fully if needed
-        // Fetch blocked logic...
+        showScreen('blocked-screen');
         const list = document.getElementById('blocked-list');
         list.innerHTML = "";
         db.ref(`users/${currentUser.uid}/blocked`).once('value').then(s => {
@@ -848,11 +772,7 @@
                     const d = document.createElement('div');
                     d.className = "list-item";
                     d.innerHTML = `<img src="${u.photo}" class="avatar-large"><div class="item-name">${u.name}</div><button style="width:auto; padding:5px 10px; background:#202c33; color:var(--primary); border-radius:5px;">Unblock</button>`;
-                    d.querySelector('button').onclick = () => {
-                        item.ref.remove();
-                        d.remove();
-                        showToast("Unblocked");
-                    };
+                    d.querySelector('button').onclick = () => { item.ref.remove(); d.remove(); showToast("Unblocked"); };
                     list.appendChild(d);
                 });
             });
