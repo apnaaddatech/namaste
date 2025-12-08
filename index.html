@@ -19,8 +19,9 @@
             --text-main: #ffffff; 
             --text-sec: #b0bec5; 
             --danger: #ff1744; 
+            --admin-color: #7289da;
             --border: #333333;
-            --blue-tick: #1da1f2; /* Verification Blue */
+            --insta-blue: #3897f0;
             --font: 'Poppins', sans-serif;
         }
 
@@ -53,8 +54,7 @@
         }
 
         .btn-danger { background-color: var(--danger); color: white; border: none; }
-        .btn-admin { background-color: #7289da; color: white; border: none; }
-
+        
         input {
             width: 100%; background: var(--card-bg); border: 1px solid var(--border);
             color: white; padding: 15px; border-radius: 12px; margin-bottom: 15px;
@@ -62,8 +62,30 @@
         }
         input:focus { border-color: var(--primary); }
 
-        /* Blue Tick Styling */
-        .verified-badge { color: var(--blue-tick); margin-left: 5px; font-size: 0.9em; vertical-align: middle; }
+        /* --- Instagram Style Blue Tick --- */
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-left: 6px;
+            width: 18px;
+            height: 18px;
+            vertical-align: middle;
+        }
+        .verified-badge .fa-certificate {
+            color: var(--insta-blue);
+            font-size: 18px;
+            filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+        }
+        .verified-badge .fa-check {
+            color: white;
+            font-size: 9px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
         /* --- Screen Containers --- */
         .screen { 
@@ -87,6 +109,7 @@
 
         .footer { margin-top: 20px; padding-bottom: 40px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;}
         .footer-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 20px; background: #222; color: white; text-decoration: none; font-size: 0.8rem; border: 1px solid #333; }
+        .footer-btn i { font-size: 1.1rem; }
 
         /* 2. Auth & Setup */
         .auth-container { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 30px; }
@@ -114,9 +137,10 @@
             position: fixed; bottom: 0; width: 100%; background: var(--card-bg); border-top: 1px solid var(--border);
             display: flex; justify-content: space-around; padding: 12px 0; z-index: 50;
         }
-        .nav-item { color: var(--text-sec); text-align: center; font-size: 0.7rem; cursor: pointer; }
+        .nav-item { color: var(--text-sec); text-align: center; font-size: 0.7rem; cursor: pointer; flex: 1; }
         .nav-item i { font-size: 1.4rem; display: block; margin-bottom: 4px; }
         .nav-item.active { color: var(--primary); }
+        .nav-item.admin-active { color: var(--admin-color); }
 
         .user-list-item {
             display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #222; cursor: pointer; transition: background 0.2s;
@@ -156,7 +180,7 @@
         .chat-input { flex: 1; background: #222; border: none; border-radius: 20px; color: white; padding: 10px 15px; margin: 0; }
         .chat-action-btn { color: var(--primary); font-size: 1.4rem; padding: 8px; cursor: pointer; }
 
-        /* 5. Profile Preview & Admin - FULL SCREEN */
+        /* 5. Profile Preview & Admin */
         .profile-view-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color); z-index: 1000; 
@@ -165,12 +189,13 @@
         .profile-view-header { display: flex; align-items: center; margin-bottom: 40px; }
         .profile-view-content { flex: 1; display: flex; flex-direction: column; align-items: center; margin-top: 50px; }
 
-        /* Admin List Styling */
+        /* Admin Tab Styling */
         .admin-user-row {
             display: flex; justify-content: space-between; align-items: center; 
             padding: 15px; border-bottom: 1px solid #333;
         }
-        .admin-user-info { display: flex; align-items: center; gap: 10px; }
+        .admin-user-info { display: flex; align-items: center; gap: 10px; flex: 1;}
+        .admin-actions { display: flex; gap: 5px; }
 
         /* Utils */
         .toast {
@@ -289,7 +314,6 @@
             <div style="position:relative;">
                 <i class="fas fa-ellipsis-v" style="color:white; padding:10px; cursor:pointer;" onclick="toggleMainMenu()"></i>
                 <div id="main-menu" class="dropdown-menu">
-                    <div class="dropdown-item hidden" id="menu-admin-panel" onclick="showAdminPanel()" style="color:#7289da; font-weight:bold;">Admin Panel</div>
                     <div class="dropdown-item" onclick="showBlockedList()">Blocked Users</div>
                     <div class="dropdown-item" onclick="showScreen('home-screen')">Home Page</div>
                     <div class="dropdown-item" onclick="logout()" style="color:var(--danger)">Logout</div>
@@ -321,12 +345,19 @@
                 <div id="blocked-list-container"></div>
                 <button class="btn-outline" onclick="switchTab('chats')">Back to Chats</button>
             </div>
+            <!-- ADMIN PANEL TAB CONTENT -->
+            <div id="tab-admin" class="hidden" style="padding:15px;">
+                <h3 style="color:var(--admin-color); margin-bottom:15px;">Admin Dashboard</h3>
+                <div id="admin-user-list"></div>
+            </div>
         </div>
 
         <div class="bottom-nav">
             <div class="nav-item active" onclick="switchTab('chats')" id="nav-chats"><i class="fas fa-comment-alt"></i> Chats</div>
             <div class="nav-item" onclick="switchTab('search')" id="nav-search"><i class="fas fa-search"></i> Search</div>
             <div class="nav-item" onclick="switchTab('profile')" id="nav-profile"><i class="fas fa-user"></i> Profile</div>
+            <!-- ADMIN TAB ICON (HIDDEN BY DEFAULT) -->
+            <div class="nav-item hidden" onclick="switchTab('admin')" id="nav-admin"><i class="fas fa-shield-alt"></i> Admin</div>
         </div>
     </div>
 
@@ -380,18 +411,6 @@
         </div>
     </div>
 
-    <!-- 7. ADMIN PANEL (FULL SCREEN) -->
-    <div id="admin-screen" class="profile-view-modal hidden slide-up" style="background: #000;">
-        <div class="profile-view-header" style="border-bottom:1px solid #333; padding-bottom:15px;">
-            <i class="fas fa-arrow-left back-btn" onclick="document.getElementById('admin-screen').classList.add('hidden')"></i>
-            <span style="font-weight:600; font-size:1.1rem;">Admin Dashboard</span>
-        </div>
-        <div style="padding:10px;">
-            <p style="color:gray; margin-bottom:20px;">Manage Verification Badges</p>
-            <div id="admin-user-list"></div>
-        </div>
-    </div>
-
     <!-- FIREBASE & LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -425,15 +444,22 @@
         const ADMIN_EMAIL = "thepremanshu@gmail.com";
         const ADMIN_PASS_REQ = "werttyy";
 
+        const tickHTML = `
+            <span class="verified-badge">
+                <i class="fas fa-certificate"></i>
+                <i class="fas fa-check"></i>
+            </span>
+        `;
+
         // --- AUTH ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
-                // Check Admin
+                // Check Admin - Show/Hide Tab
                 if(user.email === ADMIN_EMAIL) {
-                    document.getElementById('menu-admin-panel').classList.remove('hidden');
+                    document.getElementById('nav-admin').classList.remove('hidden');
                 } else {
-                    document.getElementById('menu-admin-panel').classList.add('hidden');
+                    document.getElementById('nav-admin').classList.add('hidden');
                 }
 
                 get(child(ref(db), `users/${user.uid}`)).then((snapshot) => {
@@ -449,7 +475,7 @@
             } else {
                 currentUser = null;
                 document.getElementById('get-started-btn').innerText = "Get Started";
-                document.getElementById('menu-admin-panel').classList.add('hidden');
+                document.getElementById('nav-admin').classList.add('hidden');
             }
         });
 
@@ -489,6 +515,7 @@
                     showScreen('home-screen');
                     showToast("Logged out");
                     sessionStorage.removeItem('visited');
+                    location.reload(); // Reload to clear admin state completely
                 });
             });
         };
@@ -531,12 +558,10 @@
             });
         };
 
-        // --- ADMIN PANEL ---
-        window.showAdminPanel = () => {
-            document.getElementById('main-menu').classList.remove('show');
-            document.getElementById('admin-screen').classList.remove('hidden');
+        // --- ADMIN PANEL TAB LOGIC ---
+        function loadAdminList() {
             const list = document.getElementById('admin-user-list');
-            list.innerHTML = "Loading...";
+            list.innerHTML = "Loading users...";
 
             onValue(ref(db, 'users'), (snapshot) => {
                 list.innerHTML = "";
@@ -546,7 +571,7 @@
                         const uid = child.key;
                         const div = document.createElement('div');
                         div.className = 'admin-user-row';
-                        const badge = u.isVerified ? '<i class="fas fa-check-circle verified-badge"></i>' : '';
+                        const badge = u.isVerified ? tickHTML : '';
                         const btnText = u.isVerified ? 'Unverify' : 'Verify';
                         const btnClass = u.isVerified ? 'btn-outline' : 'btn-primary';
                         
@@ -554,27 +579,43 @@
                             <div class="admin-user-info">
                                 <div class="avatar" style="width:40px;height:40px;font-size:1.2rem;">${u.emoji}</div>
                                 <div>
-                                    <div style="font-weight:bold;">${u.name} ${badge}</div>
+                                    <div style="font-weight:bold; display:flex; align-items:center;">${u.name} ${badge}</div>
                                     <div style="font-size:0.8rem;color:gray;">@${u.username}</div>
                                 </div>
                             </div>
-                            <button class="${btnClass}" style="width:auto; padding:5px 15px; font-size:0.8rem; margin:0;" onclick="toggleUserVerify('${uid}', ${u.isVerified})">${btnText}</button>
+                            <div class="admin-actions">
+                                <button class="${btnClass}" style="width:auto; padding:5px 15px; font-size:0.8rem; margin:0;" onclick="toggleUserVerify('${uid}', ${u.isVerified})">${btnText}</button>
+                                <button class="btn-danger" style="width:auto; padding:5px 15px; font-size:0.8rem; margin:0; border-radius:30px;" onclick="deleteUserAccount('${uid}', '${u.username}')"><i class="fas fa-trash"></i></button>
+                            </div>
                         `;
                         list.appendChild(div);
                     });
+                } else {
+                    list.innerHTML = "No users found.";
                 }
             });
-        };
+        }
 
         window.toggleUserVerify = (uid, currentStatus) => {
             update(ref(db, `users/${uid}`), { isVerified: !currentStatus });
+        };
+
+        window.deleteUserAccount = (uid, username) => {
+            confirmAction("Delete Account", "Permanently remove this user?", () => {
+                const updates = {};
+                updates[`users/${uid}`] = null;
+                updates[`usernames/${username}`] = null;
+                updates[`userChats/${uid}`] = null;
+                update(ref(db), updates).then(() => {
+                    showToast("User Deleted");
+                });
+            });
         };
 
         // --- NAVIGATION ---
         window.showScreen = (screenId) => {
             document.getElementById('chat-room').classList.add('hidden');
             document.getElementById('profile-preview').classList.add('hidden');
-            document.getElementById('admin-screen').classList.add('hidden');
             
             document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
             document.getElementById(screenId).classList.remove('hidden');
@@ -583,25 +624,36 @@
             if (screenId === 'main-app-screen') {
                 switchTab('chats');
                 get(child(ref(db), `users/${currentUser.uid}`)).then(s => {
-                    const u = s.val();
-                    document.getElementById('edit-name').value = u.name;
-                    document.getElementById('edit-username').value = u.username;
-                    document.getElementById('my-profile-emoji').innerText = u.emoji;
-                    // Show badge in profile tab
-                    const badge = u.isVerified ? '<i class="fas fa-check-circle verified-badge"></i>' : '';
-                    document.getElementById('profile-name-display').innerHTML = u.name + badge;
+                    if(s.exists()){
+                        const u = s.val();
+                        document.getElementById('edit-name').value = u.name;
+                        document.getElementById('edit-username').value = u.username;
+                        document.getElementById('my-profile-emoji').innerText = u.emoji;
+                        const badge = u.isVerified ? tickHTML : '';
+                        document.getElementById('profile-name-display').innerHTML = u.name + badge;
+                    }
                 });
             }
         };
 
         window.switchTab = (tab) => {
-            ['chats', 'search', 'profile', 'blocked'].forEach(t => {
-                document.getElementById(`tab-${t}`).classList.add('hidden');
-                if(document.getElementById(`nav-${t}`)) document.getElementById(`nav-${t}`).classList.remove('active');
+            ['chats', 'search', 'profile', 'blocked', 'admin'].forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                if(el) el.classList.add('hidden');
+                if(document.getElementById(`nav-${t}`)) document.getElementById(`nav-${t}`).classList.remove('active', 'admin-active');
             });
-            document.getElementById(`tab-${tab}`).classList.remove('hidden');
-            if(document.getElementById(`nav-${tab}`)) document.getElementById(`nav-${tab}`).classList.add('active');
+            
+            const target = document.getElementById(`tab-${tab}`);
+            if(target) target.classList.remove('hidden');
+            
+            const nav = document.getElementById(`nav-${tab}`);
+            if(nav) {
+                if(tab === 'admin') nav.classList.add('admin-active');
+                else nav.classList.add('active');
+            }
+            
             if (tab === 'chats') loadChats();
+            if (tab === 'admin') loadAdminList();
         };
 
         window.toggleMainMenu = () => document.getElementById('main-menu').classList.toggle('show');
@@ -618,7 +670,7 @@
                     if (uid === currentUser.uid) return;
                     get(child(ref(db), `users/${uid}`)).then((userSnap) => {
                         const user = userSnap.val();
-                        const badge = user.isVerified ? '<i class="fas fa-check-circle verified-badge"></i>' : '';
+                        const badge = user.isVerified ? tickHTML : '';
                         resDiv.innerHTML = `
                             <div class="user-list-item" onclick="openChat('${uid}')">
                                 <div class="avatar">${user.emoji}</div>
@@ -633,10 +685,12 @@
         // --- CHAT LOGIC ---
         window.openChat = async (targetUid) => {
             const snap = await get(child(ref(db), `users/${targetUid}`));
+            if(!snap.exists()) return showToast("User no longer exists");
+            
             currentChatUser = { ...snap.val(), uid: targetUid };
             currentChatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
             
-            const badge = currentChatUser.isVerified ? '<i class="fas fa-check-circle verified-badge"></i>' : '';
+            const badge = currentChatUser.isVerified ? tickHTML : '';
             document.getElementById('chat-header-name').innerHTML = currentChatUser.name + badge;
             document.getElementById('chat-header-emoji').innerText = currentChatUser.emoji;
             document.getElementById('messages-list').innerHTML = "";
@@ -739,13 +793,15 @@
                 snapshot.forEach((c) => {
                     const meta = c.val();
                     get(child(ref(db), `users/${meta.with}`)).then((u) => {
-                        const user = u.val();
-                        const badge = user.isVerified ? '<i class="fas fa-check-circle verified-badge"></i>' : '';
-                        const div = document.createElement('div');
-                        div.className = 'user-list-item';
-                        div.innerHTML = `<div class="avatar">${user.emoji}</div><div class="user-info"><div class="user-name">${user.name} ${badge}</div><div class="user-meta">${meta.lastMessage}</div></div><button style="color:red; background:none;" onclick="deleteEntireChat('${c.key}', event)"><i class="fas fa-trash"></i></button>`;
-                        div.onclick = (e) => { if(!e.target.closest('button')) openChat(meta.with); };
-                        listDiv.appendChild(div);
+                        if(u.exists()){
+                            const user = u.val();
+                            const badge = user.isVerified ? tickHTML : '';
+                            const div = document.createElement('div');
+                            div.className = 'user-list-item';
+                            div.innerHTML = `<div class="avatar">${user.emoji}</div><div class="user-info"><div class="user-name">${user.name} ${badge}</div><div class="user-meta">${meta.lastMessage}</div></div><button style="color:red; background:none;" onclick="deleteEntireChat('${c.key}', event)"><i class="fas fa-trash"></i></button>`;
+                            div.onclick = (e) => { if(!e.target.closest('button')) openChat(meta.with); };
+                            listDiv.appendChild(div);
+                        }
                     });
                 });
             });
@@ -786,7 +842,7 @@
         window.viewChatProfile = () => {
             const p = document.getElementById('profile-preview');
             p.classList.remove('hidden');
-            const badge = currentChatUser.isVerified ? '<i class="fas fa-check-circle verified-badge" style="font-size:1.5rem"></i>' : '';
+            const badge = currentChatUser.isVerified ? tickHTML.replace('18px', '24px').replace('9px','12px') : '';
             document.getElementById('preview-emoji').innerText = currentChatUser.emoji;
             document.getElementById('preview-name').innerHTML = currentChatUser.name + badge;
             document.getElementById('preview-username').innerText = "@" + currentChatUser.username;
