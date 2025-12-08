@@ -20,6 +20,7 @@
             --text-sec: #b0bec5; 
             --danger: #ff1744; 
             --border: #333333;
+            --blue-tick: #1da1f2; /* Verification Blue */
             --font: 'Poppins', sans-serif;
         }
 
@@ -34,7 +35,6 @@
         .animate-entry { animation: fadeIn 0.5s ease-out forwards; }
         .slide-right { animation: slideInRight 0.3s ease-out forwards; }
         .slide-up { animation: slideInUp 0.3s ease-out forwards; }
-        
         .hidden { display: none !important; }
 
         /* --- UI Components --- */
@@ -53,6 +53,7 @@
         }
 
         .btn-danger { background-color: var(--danger); color: white; border: none; }
+        .btn-admin { background-color: #7289da; color: white; border: none; }
 
         input {
             width: 100%; background: var(--card-bg); border: 1px solid var(--border);
@@ -61,13 +62,13 @@
         }
         input:focus { border-color: var(--primary); }
 
+        /* Blue Tick Styling */
+        .verified-badge { color: var(--blue-tick); margin-left: 5px; font-size: 0.9em; vertical-align: middle; }
+
         /* --- Screen Containers --- */
         .screen { 
-            width: 100%; height: 100%; 
-            position: absolute; top: 0; left: 0; 
-            background: var(--bg-color); 
-            display: flex; flex-direction: column; 
-            overflow-y: auto;
+            width: 100%; height: 100%; position: absolute; top: 0; left: 0; 
+            background: var(--bg-color); display: flex; flex-direction: column; overflow-y: auto;
         }
 
         /* 1. Home Screen */
@@ -84,7 +85,7 @@
         .about-section h2 { color: var(--primary); margin-bottom: 10px; }
         .about-section p { font-size: 0.85rem; color: var(--text-sec); margin-bottom: 10px; line-height: 1.5; }
 
-        .footer { margin-top: 20px; padding-bottom: 40px; display: flex; gap: 10px; justify-content: center; }
+        .footer { margin-top: 20px; padding-bottom: 40px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;}
         .footer-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 20px; background: #222; color: white; text-decoration: none; font-size: 0.8rem; border: 1px solid #333; }
 
         /* 2. Auth & Setup */
@@ -123,13 +124,13 @@
         .user-list-item:active { background: #1a1a1a; }
         .avatar { width: 50px; height: 50px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-right: 15px; border: 2px solid var(--primary); flex-shrink: 0; }
         .user-info { flex: 1; min-width: 0; }
-        .user-name { font-weight: 600; color: white; font-size: 1rem; }
+        .user-name { font-weight: 600; color: white; font-size: 1rem; display: flex; align-items: center;}
         .user-meta { font-size: 0.8rem; color: var(--text-sec); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* 4. Chat Room - FULL SCREEN OVERLAY */
         #chat-room {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color); z-index: 900; /* Above everything */
+            background: var(--bg-color); z-index: 900; 
             display: flex; flex-direction: column;
         }
 
@@ -150,20 +151,26 @@
         .message:hover .msg-delete { display: flex; }
 
         .chat-input-area {
-            padding: 10px; background: var(--card-bg); display: flex; align-items: center; gap: 10px;
-            width: 100%;
+            padding: 10px; background: var(--card-bg); display: flex; align-items: center; gap: 10px; width: 100%;
         }
         .chat-input { flex: 1; background: #222; border: none; border-radius: 20px; color: white; padding: 10px 15px; margin: 0; }
         .chat-action-btn { color: var(--primary); font-size: 1.4rem; padding: 8px; cursor: pointer; }
 
-        /* 5. Profile Preview - FULL SCREEN OVERLAY */
+        /* 5. Profile Preview & Admin - FULL SCREEN */
         .profile-view-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color); z-index: 1000; /* Above Chat */
+            background: var(--bg-color); z-index: 1000; 
             display: flex; flex-direction: column; padding: 20px;
         }
         .profile-view-header { display: flex; align-items: center; margin-bottom: 40px; }
         .profile-view-content { flex: 1; display: flex; flex-direction: column; align-items: center; margin-top: 50px; }
+
+        /* Admin List Styling */
+        .admin-user-row {
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px; border-bottom: 1px solid #333;
+        }
+        .admin-user-info { display: flex; align-items: center; gap: 10px; }
 
         /* Utils */
         .toast {
@@ -235,6 +242,7 @@
         <div class="footer">
             <a href="mailto:thepremanshu@gmail.com" class="footer-btn"><i class="fas fa-envelope"></i> Contact</a>
             <a href="https://t.me/apnaadda_official" target="_blank" class="footer-btn"><i class="fab fa-telegram"></i> Telegram</a>
+            <a href="https://whatsapp.com/channel/0029Vb7K9Ms3gvWeXnfpLy3x" target="_blank" class="footer-btn"><i class="fab fa-whatsapp"></i> WhatsApp</a>
         </div>
     </div>
 
@@ -281,6 +289,7 @@
             <div style="position:relative;">
                 <i class="fas fa-ellipsis-v" style="color:white; padding:10px; cursor:pointer;" onclick="toggleMainMenu()"></i>
                 <div id="main-menu" class="dropdown-menu">
+                    <div class="dropdown-item hidden" id="menu-admin-panel" onclick="showAdminPanel()" style="color:#7289da; font-weight:bold;">Admin Panel</div>
                     <div class="dropdown-item" onclick="showBlockedList()">Blocked Users</div>
                     <div class="dropdown-item" onclick="showScreen('home-screen')">Home Page</div>
                     <div class="dropdown-item" onclick="logout()" style="color:var(--danger)">Logout</div>
@@ -301,6 +310,7 @@
             <!-- My Profile -->
             <div id="tab-profile" class="hidden" style="padding:20px; text-align:center;">
                 <div class="emoji-picker" id="my-profile-emoji" onclick="editProfileEmoji()"></div>
+                <h3 id="profile-name-display" style="color:white; margin-bottom:10px; display:flex; justify-content:center; align-items:center;"></h3>
                 <input type="text" id="edit-name" placeholder="Full Name">
                 <input type="text" id="edit-username" placeholder="Username" readonly style="opacity: 0.7;">
                 <button class="btn-primary" onclick="updateProfile()">Update Profile</button>
@@ -362,11 +372,23 @@
         
         <div class="profile-view-content">
             <div class="avatar" id="preview-emoji" style="width:120px; height:120px; font-size:4rem; margin-bottom:20px; border-width:4px;"></div>
-            <h2 id="preview-name" style="color:white; font-size:1.8rem;"></h2>
+            <h2 id="preview-name" style="color:white; font-size:1.8rem; display:flex; align-items:center;"></h2>
             <p id="preview-username" style="color:var(--primary); font-size:1.1rem; margin-bottom: 40px;"></p>
             
             <button class="btn-primary btn-danger" onclick="blockCurrentUser(); closeProfilePreview();" style="width:80%;">Block User</button>
             <button class="btn-outline" onclick="deleteCurrentChat(); closeProfilePreview();" style="width:80%; margin-top:15px; border-color:var(--danger); color:var(--danger);">Delete Chat</button>
+        </div>
+    </div>
+
+    <!-- 7. ADMIN PANEL (FULL SCREEN) -->
+    <div id="admin-screen" class="profile-view-modal hidden slide-up" style="background: #000;">
+        <div class="profile-view-header" style="border-bottom:1px solid #333; padding-bottom:15px;">
+            <i class="fas fa-arrow-left back-btn" onclick="document.getElementById('admin-screen').classList.add('hidden')"></i>
+            <span style="font-weight:600; font-size:1.1rem;">Admin Dashboard</span>
+        </div>
+        <div style="padding:10px;">
+            <p style="color:gray; margin-bottom:20px;">Manage Verification Badges</p>
+            <div id="admin-user-list"></div>
         </div>
     </div>
 
@@ -399,10 +421,21 @@
         let currentEmojiIdx = 0;
         let mediaRecorder;
         let audioChunks = [];
+        
+        const ADMIN_EMAIL = "thepremanshu@gmail.com";
+        const ADMIN_PASS_REQ = "werttyy";
 
+        // --- AUTH ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
+                // Check Admin
+                if(user.email === ADMIN_EMAIL) {
+                    document.getElementById('menu-admin-panel').classList.remove('hidden');
+                } else {
+                    document.getElementById('menu-admin-panel').classList.add('hidden');
+                }
+
                 get(child(ref(db), `users/${user.uid}`)).then((snapshot) => {
                     if (snapshot.exists()) {
                         document.getElementById('get-started-btn').innerText = "BACK TO CHAT AREA";
@@ -416,6 +449,7 @@
             } else {
                 currentUser = null;
                 document.getElementById('get-started-btn').innerText = "Get Started";
+                document.getElementById('menu-admin-panel').classList.add('hidden');
             }
         });
 
@@ -429,9 +463,18 @@
         };
 
         window.login = () => {
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-pass').value;
-            signInWithEmailAndPassword(auth, email, pass).then(() => showScreen('main-app-screen')).catch(e => showToast(e.message));
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-pass').value.trim();
+            
+            // Hardcoded Admin Security Check
+            if (email === ADMIN_EMAIL && pass !== ADMIN_PASS_REQ) {
+                showToast("Invalid Credentials for this account");
+                return;
+            }
+
+            signInWithEmailAndPassword(auth, email, pass)
+            .then(() => showScreen('main-app-screen'))
+            .catch(e => showToast(e.message));
         };
 
         window.signup = () => {
@@ -455,6 +498,7 @@
             document.getElementById('signup-form').classList.toggle('hidden');
         };
 
+        // --- PROFILE ---
         window.cycleEmoji = () => {
             currentEmojiIdx = (currentEmojiIdx + 1) % emojis.length;
             document.getElementById('setup-emoji-disp').innerText = emojis[currentEmojiIdx];
@@ -468,7 +512,7 @@
                 if (snapshot.exists()) showToast("Username taken");
                 else {
                     const updates = {};
-                    updates[`users/${currentUser.uid}`] = { name, username, emoji: emojis[currentEmojiIdx], email: currentUser.email };
+                    updates[`users/${currentUser.uid}`] = { name, username, emoji: emojis[currentEmojiIdx], email: currentUser.email, isVerified: false };
                     updates[`usernames/${username}`] = currentUser.uid;
                     update(ref(db), updates).then(() => showScreen('main-app-screen'));
                 }
@@ -487,14 +531,55 @@
             });
         };
 
+        // --- ADMIN PANEL ---
+        window.showAdminPanel = () => {
+            document.getElementById('main-menu').classList.remove('show');
+            document.getElementById('admin-screen').classList.remove('hidden');
+            const list = document.getElementById('admin-user-list');
+            list.innerHTML = "Loading...";
+
+            onValue(ref(db, 'users'), (snapshot) => {
+                list.innerHTML = "";
+                if(snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        const u = child.val();
+                        const uid = child.key;
+                        const div = document.createElement('div');
+                        div.className = 'admin-user-row';
+                        const badge = u.isVerified ? '<i class="fas fa-check-circle verified-badge"></i>' : '';
+                        const btnText = u.isVerified ? 'Unverify' : 'Verify';
+                        const btnClass = u.isVerified ? 'btn-outline' : 'btn-primary';
+                        
+                        div.innerHTML = `
+                            <div class="admin-user-info">
+                                <div class="avatar" style="width:40px;height:40px;font-size:1.2rem;">${u.emoji}</div>
+                                <div>
+                                    <div style="font-weight:bold;">${u.name} ${badge}</div>
+                                    <div style="font-size:0.8rem;color:gray;">@${u.username}</div>
+                                </div>
+                            </div>
+                            <button class="${btnClass}" style="width:auto; padding:5px 15px; font-size:0.8rem; margin:0;" onclick="toggleUserVerify('${uid}', ${u.isVerified})">${btnText}</button>
+                        `;
+                        list.appendChild(div);
+                    });
+                }
+            });
+        };
+
+        window.toggleUserVerify = (uid, currentStatus) => {
+            update(ref(db, `users/${uid}`), { isVerified: !currentStatus });
+        };
+
+        // --- NAVIGATION ---
         window.showScreen = (screenId) => {
-            // Close overlays first
             document.getElementById('chat-room').classList.add('hidden');
             document.getElementById('profile-preview').classList.add('hidden');
+            document.getElementById('admin-screen').classList.add('hidden');
             
             document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
             document.getElementById(screenId).classList.remove('hidden');
             document.getElementById('main-menu').classList.remove('show');
+            
             if (screenId === 'main-app-screen') {
                 switchTab('chats');
                 get(child(ref(db), `users/${currentUser.uid}`)).then(s => {
@@ -502,6 +587,9 @@
                     document.getElementById('edit-name').value = u.name;
                     document.getElementById('edit-username').value = u.username;
                     document.getElementById('my-profile-emoji').innerText = u.emoji;
+                    // Show badge in profile tab
+                    const badge = u.isVerified ? '<i class="fas fa-check-circle verified-badge"></i>' : '';
+                    document.getElementById('profile-name-display').innerHTML = u.name + badge;
                 });
             }
         };
@@ -518,6 +606,7 @@
 
         window.toggleMainMenu = () => document.getElementById('main-menu').classList.toggle('show');
 
+        // --- SEARCH ---
         window.handleSearch = () => {
             const query = document.getElementById('search-input').value.trim();
             if (query.length < 1) { document.getElementById('search-results').innerHTML = ""; return; }
@@ -529,10 +618,11 @@
                     if (uid === currentUser.uid) return;
                     get(child(ref(db), `users/${uid}`)).then((userSnap) => {
                         const user = userSnap.val();
+                        const badge = user.isVerified ? '<i class="fas fa-check-circle verified-badge"></i>' : '';
                         resDiv.innerHTML = `
                             <div class="user-list-item" onclick="openChat('${uid}')">
                                 <div class="avatar">${user.emoji}</div>
-                                <div class="user-info"><div class="user-name">${user.name}</div><div class="user-meta">@${user.username}</div></div>
+                                <div class="user-info"><div class="user-name">${user.name} ${badge}</div><div class="user-meta">@${user.username}</div></div>
                                 <button class="btn-primary" style="width:auto; padding:5px 15px; font-size:0.8rem;">Chat</button>
                             </div>`;
                     });
@@ -540,16 +630,17 @@
             });
         };
 
+        // --- CHAT LOGIC ---
         window.openChat = async (targetUid) => {
             const snap = await get(child(ref(db), `users/${targetUid}`));
             currentChatUser = { ...snap.val(), uid: targetUid };
             currentChatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
             
-            document.getElementById('chat-header-name').innerText = currentChatUser.name;
+            const badge = currentChatUser.isVerified ? '<i class="fas fa-check-circle verified-badge"></i>' : '';
+            document.getElementById('chat-header-name').innerHTML = currentChatUser.name + badge;
             document.getElementById('chat-header-emoji').innerText = currentChatUser.emoji;
             document.getElementById('messages-list').innerHTML = "";
             
-            // Show Full Screen Chat
             document.getElementById('chat-room').classList.remove('hidden');
             
             checkBlockStatus(targetUid);
@@ -649,9 +740,10 @@
                     const meta = c.val();
                     get(child(ref(db), `users/${meta.with}`)).then((u) => {
                         const user = u.val();
+                        const badge = user.isVerified ? '<i class="fas fa-check-circle verified-badge"></i>' : '';
                         const div = document.createElement('div');
                         div.className = 'user-list-item';
-                        div.innerHTML = `<div class="avatar">${user.emoji}</div><div class="user-info"><div class="user-name">${user.name}</div><div class="user-meta">${meta.lastMessage}</div></div><button style="color:red; background:none;" onclick="deleteEntireChat('${c.key}', event)"><i class="fas fa-trash"></i></button>`;
+                        div.innerHTML = `<div class="avatar">${user.emoji}</div><div class="user-info"><div class="user-name">${user.name} ${badge}</div><div class="user-meta">${meta.lastMessage}</div></div><button style="color:red; background:none;" onclick="deleteEntireChat('${c.key}', event)"><i class="fas fa-trash"></i></button>`;
                         div.onclick = (e) => { if(!e.target.closest('button')) openChat(meta.with); };
                         listDiv.appendChild(div);
                     });
@@ -694,8 +786,9 @@
         window.viewChatProfile = () => {
             const p = document.getElementById('profile-preview');
             p.classList.remove('hidden');
+            const badge = currentChatUser.isVerified ? '<i class="fas fa-check-circle verified-badge" style="font-size:1.5rem"></i>' : '';
             document.getElementById('preview-emoji').innerText = currentChatUser.emoji;
-            document.getElementById('preview-name').innerText = currentChatUser.name;
+            document.getElementById('preview-name').innerHTML = currentChatUser.name + badge;
             document.getElementById('preview-username').innerText = "@" + currentChatUser.username;
         };
 
