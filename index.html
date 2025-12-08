@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Mobile Optimization Meta Tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>NAMASTE - Powered by Apna Adda</title>
     
     <!-- Icons -->
@@ -22,6 +23,9 @@
             --danger: #FF3B30;
             --silver: #E0E0E0;
             --accent-gradient: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            /* Safe Area Variables for Notches */
+            --safe-top: env(safe-area-inset-top);
+            --safe-bottom: env(safe-area-inset-bottom);
         }
 
         * {
@@ -29,13 +33,14 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: transparent; /* Remove blue tap highlight */
         }
 
         body {
             background-color: #000;
             color: var(--text-color);
             height: 100vh;
+            height: 100dvh; /* Dynamic Height for Mobile Browsers */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -53,22 +58,41 @@
         #app-container {
             background-color: var(--bg-color);
             position: relative;
-            overflow-y: auto;
+            overflow: hidden; /* Prevent body scroll within app */
             transition: all 0.5s ease-in-out;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* WEB LAYOUT */
-        #app-container.layout-web { width: 100%; height: 100%; max-width: 100%; border-radius: 0; }
+        /* 1. WEB LAYOUT (Home Page) */
+        #app-container.layout-web { 
+            width: 100%; 
+            height: 100%; 
+            max-width: 100%; 
+            border-radius: 0;
+            overflow-y: auto; /* Scrollable web page */
+        }
 
-        /* MOBILE LAYOUT */
+        /* 2. MOBILE LAYOUT (Chat App) */
         #app-container.layout-mobile {
-            width: 100%; max-width: 450px; height: 95vh;
+            width: 100%; 
+            max-width: 450px; /* Limits width on Desktop */
+            height: 95vh;
             border-radius: 20px;
             box-shadow: 0 0 50px rgba(37, 211, 102, 0.15);
             border: 1px solid #333;
         }
+
+        /* True Mobile Device Overrides */
         @media (max-width: 500px) {
-            #app-container.layout-mobile { height: 100vh; border-radius: 0; max-width: 100%; }
+            #app-container.layout-mobile { 
+                height: 100vh; 
+                height: 100dvh; /* Full screen on mobile */
+                border-radius: 0; 
+                max-width: 100%;
+                border: none;
+                box-shadow: none;
+            }
         }
 
         /* --- Components --- */
@@ -93,12 +117,23 @@
 
         input {
             width: 100%; padding: 15px; background: var(--surface-color);
-            border: 1px solid #333; border-radius: 12px; color: white; margin-bottom: 15px; font-size: 14px;
+            border: 1px solid #333; border-radius: 12px; color: white; margin-bottom: 15px; 
+            font-size: 16px; /* Prevents zoom on iOS */
         }
         input:focus { border-color: var(--primary); }
 
         /* --- Screens --- */
-        .screen { display: none; flex-direction: column; height: 100%; width: 100%; position: absolute; top: 0; left: 0; background: var(--bg-color); z-index: 10; }
+        .screen { 
+            display: none; 
+            flex-direction: column; 
+            height: 100%; 
+            width: 100%; 
+            position: absolute; 
+            top: 0; left: 0; 
+            background: var(--bg-color); 
+            z-index: 10; 
+        }
+        
         #app-container.layout-web .screen.active { position: relative; height: auto; min-height: 100%; }
         .screen.active { display: flex; }
 
@@ -110,63 +145,102 @@
         
         .highlights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 50px; }
         .highlight-card { background: var(--surface-color); padding: 30px; border-radius: 15px; border-left: 4px solid var(--primary); transition: transform 0.3s; }
-        .highlight-card:hover { transform: translateY(-5px); }
         .highlight-title { font-weight: 600; color: var(--silver); margin-bottom: 12px; font-size: 18px; display: flex; align-items: center; gap: 10px; }
         .highlight-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
-
         .about-section { background: #1a1a1a; padding: 40px; border-radius: 15px; margin: 20px auto; font-size: 14px; color: var(--text-secondary); line-height: 1.8; max-width: 800px; border: 1px solid #333; }
         
-        /* Updated Footer */
         .home-footer { margin-top: 50px; padding: 30px 0; text-align: center; display: flex; justify-content: center; gap: 20px; border-top: 1px solid #333; flex-wrap: wrap; flex-direction: column; align-items: center; }
         .social-row { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
         .social-link { color: var(--primary); text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; background: #222; padding: 10px 15px; border-radius: 20px; border: 1px solid #333; transition: all 0.3s; }
-        .social-link:hover { background: #333; border-color: var(--primary); }
         .footer-credits { margin-top: 20px; font-size: 11px; color: #555; letter-spacing: 1px; line-height: 1.6; text-transform: uppercase; }
 
         /* --- Auth & Profile --- */
-        .auth-container { padding: 30px; display: flex; flex-direction: column; justify-content: center; height: 100%; }
+        .auth-container { padding: 30px; display: flex; flex-direction: column; justify-content: center; height: 100%; overflow-y: auto; }
         
-        .dp-preview-wrapper { width: 120px; height: 120px; margin: 0 auto 20px auto; position: relative; }
+        .dp-preview-wrapper { width: 120px; height: 120px; margin: 0 auto 20px auto; position: relative; flex-shrink: 0; }
         .dp-preview-img { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; background: #222; }
         
         .emoji-selector { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 20px; padding: 10px; background: #222; border-radius: 15px; max-height: 150px; overflow-y: auto; }
         .emoji-btn { font-size: 24px; background: transparent; cursor: pointer; padding: 5px; border-radius: 5px; transition: transform 0.2s; text-align: center; }
-        .emoji-btn:hover { background: #333; transform: scale(1.2); }
         .emoji-btn.selected { background: var(--primary-dark); }
 
-        /* --- Header & Nav --- */
-        .app-header { padding: 15px 20px; background: var(--surface-color); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.3); z-index: 20; position: relative; }
+        /* --- App Header (Mobile Optimized) --- */
+        .app-header { 
+            padding: 15px 20px; 
+            padding-top: max(15px, var(--safe-top)); /* Notch Support */
+            background: var(--surface-color); 
+            display: flex; justify-content: space-between; align-items: center; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3); z-index: 20; position: relative; 
+            flex-shrink: 0; /* Prevents shrinking */
+        }
         .header-title { font-size: 18px; font-weight: 700; color: white; }
         .more-options { padding: 10px; cursor: pointer; } 
-        /* Menu Logic */
-        .dropdown-menu { position: absolute; right: 10px; top: 50px; background: #2A2A2A; border-radius: 8px; width: 160px; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 100; }
+        
+        .dropdown-menu { position: absolute; right: 10px; top: 60px; background: #2A2A2A; border-radius: 8px; width: 160px; display: none; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 100; }
         .dropdown-menu.show { display: block; animation: fadeIn 0.2s; }
         .dropdown-item { padding: 12px 15px; font-size: 14px; cursor: pointer; color: white; border-bottom: 1px solid #333; }
         
-        .content-area { flex: 1; overflow-y: auto; position: relative; }
+        /* Content Area */
+        .content-area { 
+            flex: 1; 
+            overflow-y: auto; 
+            position: relative; 
+            -webkit-overflow-scrolling: touch; /* Momentum scrolling */
+        }
 
-        /* --- BIG FOOTER --- */
-        .bottom-nav { background: var(--surface-color); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; margin-top: auto; }
+        /* --- BIG FOOTER (Mobile Optimized) --- */
+        .bottom-nav { 
+            background: var(--surface-color); 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 15px 0; 
+            padding-bottom: max(15px, var(--safe-bottom)); /* Home Bar Support */
+            border-top: 1px solid #333; 
+            margin-top: auto; 
+            flex-shrink: 0;
+        }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-secondary); font-size: 12px; cursor: pointer; gap: 5px; transition: all 0.2s ease; flex: 1; }
         .nav-item i { font-size: 24px; margin-bottom: 3px; }
         .nav-item.active { color: var(--primary); }
 
         /* --- Lists --- */
         .list-item { padding: 15px 20px; display: flex; align-items: center; border-bottom: 1px solid #222; cursor: pointer; }
-        .avatar { width: 50px; height: 50px; border-radius: 50%; background: #333; margin-right: 15px; object-fit: cover; }
-        .item-info { flex: 1; }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; background: #333; margin-right: 15px; object-fit: cover; flex-shrink: 0; }
+        .item-info { flex: 1; overflow: hidden; }
         .item-name { font-weight: 600; font-size: 16px; color: white; }
-        .item-sub { font-size: 13px; color: var(--text-secondary); }
+        .item-sub { font-size: 13px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* --- Chat Room --- */
-        #chat-room { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 30; display: none; flex-direction: column; }
+        /* --- Chat Room (Full Flexbox) --- */
+        #chat-room { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: var(--bg-color); z-index: 30; display: none; 
+            flex-direction: column; 
+        }
         #chat-room.active { display: flex; }
-        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-blend-mode: soft-light; }
+        
+        .chat-messages { 
+            flex: 1; 
+            padding: 15px; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); 
+            background-blend-mode: soft-light; 
+            -webkit-overflow-scrolling: touch;
+        }
         .message { max-width: 75%; padding: 10px 14px; border-radius: 15px; font-size: 14px; position: relative; word-wrap: break-word; }
         .message.sent { background: var(--primary-dark); align-self: flex-end; border-bottom-right-radius: 2px; }
         .message.received { background: #333; align-self: flex-start; border-bottom-left-radius: 2px; }
-        .chat-input-area { padding: 10px; background: var(--surface-color); display: flex; align-items: center; gap: 10px; }
-        .send-btn { background: var(--primary); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+        
+        .chat-input-area { 
+            padding: 10px; 
+            padding-bottom: max(10px, var(--safe-bottom)); 
+            background: var(--surface-color); 
+            display: flex; align-items: center; gap: 10px; 
+            flex-shrink: 0;
+        }
+        .send-btn { background: var(--primary); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0; }
 
         /* --- Profile View --- */
         .profile-view { padding: 30px; text-align: center; }
@@ -174,7 +248,7 @@
         
         /* --- Modal & Toast --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; display: none; justify-content: center; align-items: center; }
-        .modal-box { background: #222; padding: 25px; border-radius: 15px; width: 85%; text-align: center; border: 1px solid #333; }
+        .modal-box { background: #222; padding: 25px; border-radius: 15px; width: 85%; max-width: 350px; text-align: center; border: 1px solid #333; }
         .modal-actions { display: flex; gap: 10px; justify-content: center; margin-top: 20px; }
         .btn-modal { padding: 8px 20px; border-radius: 20px; font-size: 14px; }
         .btn-confirm { background: var(--primary); color: white; }
@@ -185,7 +259,7 @@
         /* --- Call Screen --- */
         .call-screen { position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 200; display: none; flex-direction: column; align-items: center; justify-content: space-between; padding: 40px 20px; }
         .call-avatar { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--surface-color); animation: pulse 2s infinite; }
-        .call-controls { display: flex; gap: 20px; }
+        .call-controls { display: flex; gap: 20px; padding-bottom: 50px; }
         .call-btn { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; }
         .btn-end { background: var(--danger); }
         .btn-mute { background: #444; }
@@ -259,7 +333,6 @@
             <p>APNA ADDA is a technology-driven company committed to building smart, simple, and useful digital solutions for everyday life.</p>
         </div>
 
-        <!-- UPDATED FOOTER TEXT -->
         <div class="home-footer">
             <div class="social-row">
                 <a href="mailto:thepremanshu@gmail.com" class="social-link"><i class="fas fa-envelope"></i> Contact Us</a>
@@ -340,29 +413,20 @@
         <!-- Profile Tab -->
         <div id="tab-profile" class="content-area" style="display: none;">
             
-            <!-- VIEW MODE (Default) -->
+            <!-- VIEW MODE -->
             <div id="profile-view-mode" class="profile-view animate-arrival">
                 <div class="dp-preview-wrapper">
                     <img src="" id="view-profile-img" class="dp-preview-img">
                 </div>
                 <h2 id="view-profile-name" style="color: white; margin-top: 10px;">Name</h2>
                 <p id="view-profile-user" style="color: var(--primary); margin-bottom: 30px;">@username</p>
-                
-                <div style="text-align: left; background: #222; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-                    <p style="font-size: 11px; color: var(--silver);">STATUS</p>
-                    <p style="color:white; font-size: 14px;">Available</p>
-                </div>
-
                 <button class="btn-primary" onclick="enableEditMode()">Edit Profile</button>
             </div>
 
-            <!-- EDIT MODE (Hidden) -->
+            <!-- EDIT MODE -->
             <div id="profile-edit-mode" class="profile-view" style="display: none;">
                 <h3 style="color:white; margin-bottom: 20px;">Edit Profile</h3>
-                
-                <div class="dp-preview-wrapper">
-                    <img src="" id="edit-profile-img" class="dp-preview-img">
-                </div>
+                <div class="dp-preview-wrapper"><img src="" id="edit-profile-img" class="dp-preview-img"></div>
                 
                 <div style="text-align: left;">
                     <p style="font-size:12px; color:var(--text-secondary); margin-bottom:5px;">Change Avatar:</p>
@@ -381,7 +445,6 @@
 
         </div>
 
-        <!-- BIG FOOTER -->
         <div class="bottom-nav">
             <div class="nav-item active" onclick="switchTab('chats', this)"><i class="fas fa-comment-alt"></i><span>Chats</span></div>
             <div class="nav-item" onclick="switchTab('calls', this)"><i class="fas fa-phone-alt"></i><span>Calls</span></div>
@@ -447,10 +510,10 @@
 
     let currentUser = null, currentChatId = null, currentChatUser = null, isSignup = false;
     let selectedEmoji = "😎"; 
-    let currentUserData = null; // Store user data for edit check
+    let currentUserData = null;
 
     // Emojis List
-    const emojiList = ["😎","🤠","🤓","🥳","👽","🤖","👻","💀","💩","🤡","👹","🐯","🦁","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯","🦄","🐲","🔥","⚡","⭐","⚽","🏀"];
+    const emojiList = ["😎","🤠","🤓","🥳","👽","🤖","👻","💀","❤️","🤡","👹","🐯","🦁","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯","🦄","🐲","🔥","⚡","⭐","⚽","🏀"];
 
     const screens = { home: document.getElementById('home-screen'), auth: document.getElementById('auth-screen'), setup: document.getElementById('setup-screen'), app: document.getElementById('app-screen'), blocked: document.getElementById('blocked-users-screen') };
     const appContainer = document.getElementById('app-container');
@@ -495,24 +558,13 @@
         screens[name].classList.add('active');
     }
 
-    // --- Menu Handling (Close when clicking outside) ---
-    function toggleMenu(e) {
-        e.stopPropagation(); // Prevent immediate closing
-        const menu = document.getElementById('main-menu');
-        menu.classList.toggle('show');
-    }
-
+    // --- Menu Handling ---
+    function toggleMenu(e) { e.stopPropagation(); document.getElementById('main-menu').classList.toggle('show'); }
     window.onclick = function(event) {
         const menu = document.getElementById('main-menu');
-        if (menu.classList.contains('show')) {
-            // If click is not on the menu button
-            if (!event.target.closest('#menu-btn')) {
-                menu.classList.remove('show');
-            }
-        }
+        if (menu.classList.contains('show') && !event.target.closest('#menu-btn')) { menu.classList.remove('show'); }
     }
     function closeMenu() { document.getElementById('main-menu').classList.remove('show'); }
-
 
     // --- Auth Logic ---
     auth.onAuthStateChanged(user => {
@@ -552,17 +604,15 @@
     
     function confirmLogout() { showModal("Logout", "Log out now?", () => auth.signOut().then(() => { showScreen('home'); sessionStorage.removeItem('onHome'); closeMenu(); })); }
 
-    // --- Profile Saving (First Time) ---
+    // --- Profile Saving ---
     function saveProfile() {
         const name = document.getElementById('setup-name').value;
         const username = document.getElementById('setup-username').value.toLowerCase().replace(/\s/g, '');
         const btn = document.getElementById('btn-save-profile');
         if (!name || !username) { alert("Name & Username required"); return; }
 
-        // Check if username unique
         db.ref('usernames/' + username).once('value').then(snap => {
             if(snap.exists()) { alert("Username already taken!"); return; }
-
             btn.innerText = "Creating..."; btn.disabled = true;
             const photoURL = createEmojiAvatar(selectedEmoji);
             const updates = {
@@ -576,16 +626,14 @@
         });
     }
 
-    // --- Profile Editing (Separate Modes) ---
+    // --- Profile Editing ---
     function loadProfile() {
         db.ref('users/' + currentUser.uid).once('value').then(s => {
             currentUserData = s.val();
-            // Populate View Mode
             document.getElementById('view-profile-name').innerText = currentUserData.name;
             document.getElementById('view-profile-user').innerText = "@" + currentUserData.username;
             document.getElementById('view-profile-img').src = currentUserData.photo;
             
-            // Populate Edit Mode fields
             document.getElementById('edit-name-input').value = currentUserData.name;
             document.getElementById('edit-username-input').value = currentUserData.username;
             document.getElementById('edit-profile-img').src = currentUserData.photo;
@@ -606,48 +654,31 @@
         const newName = document.getElementById('edit-name-input').value;
         const newUsername = document.getElementById('edit-username-input').value.toLowerCase().replace(/\s/g, '');
         const btn = document.getElementById('btn-update-profile');
-        
         if(!newName || !newUsername) { alert("Fields cannot be empty"); return; }
 
         showModal("Update Profile", "Save these changes?", () => {
             btn.innerText = "Updating..."; btn.disabled = true;
-            
-            const newPhoto = createEmojiAvatar(selectedEmoji); // Regenerate with current selection
+            const newPhoto = createEmojiAvatar(selectedEmoji);
             
             const processUpdate = () => {
-                 const updates = {
-                     ['users/' + currentUser.uid + '/name']: newName,
-                     ['users/' + currentUser.uid + '/photo']: newPhoto
-                 };
-                 
-                 // If username changed
+                 const updates = { ['users/' + currentUser.uid + '/name']: newName, ['users/' + currentUser.uid + '/photo']: newPhoto };
                  if(newUsername !== currentUserData.username) {
                      updates['users/' + currentUser.uid + '/username'] = newUsername;
-                     updates['usernames/' + currentUserData.username] = null; // Delete old
-                     updates['usernames/' + newUsername] = currentUser.uid; // Add new
+                     updates['usernames/' + currentUserData.username] = null;
+                     updates['usernames/' + newUsername] = currentUser.uid;
                  }
-
                  db.ref().update(updates).then(() => {
-                     showToast("Profile Updated");
-                     btn.innerText = "Save Changes"; btn.disabled = false;
-                     loadProfile();
-                     cancelEditMode();
+                     showToast("Profile Updated"); btn.innerText = "Save Changes"; btn.disabled = false;
+                     loadProfile(); cancelEditMode();
                  });
             };
 
-            // Check username uniqueness ONLY if changed
             if (newUsername !== currentUserData.username) {
                 db.ref('usernames/' + newUsername).once('value').then(snap => {
-                    if (snap.exists()) {
-                         alert("Username taken. Choose another.");
-                         btn.innerText = "Save Changes"; btn.disabled = false;
-                    } else {
-                        processUpdate();
-                    }
+                    if (snap.exists()) { alert("Username taken."); btn.innerText = "Save Changes"; btn.disabled = false; }
+                    else { processUpdate(); }
                 });
-            } else {
-                processUpdate();
-            }
+            } else { processUpdate(); }
         });
     }
 
@@ -769,4 +800,4 @@
     function showToast(m) { const t=document.getElementById('toast'); t.innerText=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 3000); }
 </script>
 </body>
-</html>
+                </html>
