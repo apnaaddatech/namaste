@@ -32,6 +32,7 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
         @keyframes slideInUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .animate-entry { animation: fadeIn 0.5s ease-out forwards; }
         .slide-right { animation: slideInRight 0.3s ease-out forwards; }
@@ -62,30 +63,13 @@
         }
         input:focus { border-color: var(--primary); }
 
-        /* --- Instagram Style Blue Tick --- */
+        /* Blue Tick */
         .verified-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            margin-left: 6px;
-            width: 18px;
-            height: 18px;
-            vertical-align: middle;
+            display: inline-flex; align-items: center; justify-content: center; position: relative;
+            margin-left: 6px; width: 18px; height: 18px; vertical-align: middle;
         }
-        .verified-badge .fa-certificate {
-            color: var(--insta-blue);
-            font-size: 18px;
-            filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
-        }
-        .verified-badge .fa-check {
-            color: white;
-            font-size: 9px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+        .verified-badge .fa-certificate { color: var(--insta-blue); font-size: 18px; filter: drop-shadow(0 0 2px rgba(0,0,0,0.5)); }
+        .verified-badge .fa-check { color: white; font-size: 9px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
         /* --- Screen Containers --- */
         .screen { 
@@ -151,7 +135,7 @@
         .user-name { font-weight: 600; color: white; font-size: 1rem; display: flex; align-items: center;}
         .user-meta { font-size: 0.8rem; color: var(--text-sec); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* 4. Chat Room - FULL SCREEN OVERLAY */
+        /* 4. Chat Room & Input Area */
         #chat-room {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color); z-index: 900; 
@@ -178,7 +162,14 @@
             padding: 10px; background: var(--card-bg); display: flex; align-items: center; gap: 10px; width: 100%;
         }
         .chat-input { flex: 1; background: #222; border: none; border-radius: 20px; color: white; padding: 10px 15px; margin: 0; }
-        .chat-action-btn { color: var(--primary); font-size: 1.4rem; padding: 8px; cursor: pointer; }
+        .chat-action-btn { color: var(--primary); font-size: 1.4rem; padding: 8px; cursor: pointer; transition: 0.2s; }
+        .recording-active { color: var(--danger); transform: scale(1.2); }
+
+        /* Loader */
+        .media-loader {
+            border: 3px solid #333; border-top: 3px solid var(--primary); border-radius: 50%;
+            width: 25px; height: 25px; animation: spin 0.8s linear infinite; display: none;
+        }
 
         /* 5. Profile Preview & Admin */
         .profile-view-modal {
@@ -189,11 +180,7 @@
         .profile-view-header { display: flex; align-items: center; margin-bottom: 40px; }
         .profile-view-content { flex: 1; display: flex; flex-direction: column; align-items: center; margin-top: 50px; }
 
-        /* Admin Tab Styling */
-        .admin-user-row {
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 15px; border-bottom: 1px solid #333;
-        }
+        .admin-user-row { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #333; }
         .admin-user-info { display: flex; align-items: center; gap: 10px; flex: 1;}
         .admin-actions { display: flex; gap: 5px; }
 
@@ -216,10 +203,8 @@
 </head>
 <body>
 
-    <!-- Notification Toast -->
     <div id="toast" class="toast">Notification</div>
 
-    <!-- Confirmation Modal -->
     <div id="confirm-modal" class="confirm-overlay">
         <div class="confirm-box">
             <h3 id="confirm-title" style="color:white; margin-bottom:10px;">Confirm</h3>
@@ -239,6 +224,12 @@
         <button id="get-started-btn" class="btn-primary" onclick="handleGetStarted()">Get Started</button>
 
         <div style="margin-top: 30px;">
+            <!-- New Feature Card for Verification -->
+            <div class="feature-card" style="border-left-color: var(--insta-blue);">
+                <h3 style="color: var(--insta-blue);">Get Verified!</h3>
+                <p>Users who join both our <a href="https://t.me/apnaadda_official" target="_blank">Telegram</a> and <a href="https://whatsapp.com/channel/0029Vb7K9Ms3gvWeXnfpLy3x" target="_blank">WhatsApp</a> channels can get the Blue Tick verified badge.</p>
+            </div>
+
             <div class="feature-card">
                 <h3>End-to-end encrypted</h3>
                 <p>100% private & secure environment. Your messages are protected.</p>
@@ -250,10 +241,6 @@
             <div class="feature-card">
                 <h3>Media sharing supported</h3>
                 <p>Send Photos, Videos and Voice messages seamlessly within the chat room.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Powered by APNA ADDA</h3>
-                <p>Technology for everyday growth. <a href="https://apnaaddatech.github.io/Official_/" target="_blank">CLICK HERE FOR OFFICIAL WEB</a></p>
             </div>
         </div>
 
@@ -276,7 +263,6 @@
         <div class="auth-container">
             <h2 class="hero-title" style="margin-top:0">Welcome</h2>
             <p class="hero-subtitle">Log in to NAMASTE</p>
-            
             <div id="auth-forms">
                 <div id="login-form">
                     <input type="email" id="login-email" placeholder="Email Address">
@@ -322,16 +308,13 @@
         </header>
 
         <div class="content-area" id="tab-content">
-            <!-- Chats -->
             <div id="tab-chats">
                 <div style="padding:15px; color:gray; font-size:0.8rem;" id="chat-list-container">Loading chats...</div>
             </div>
-            <!-- Search -->
             <div id="tab-search" class="hidden" style="padding:15px;">
                 <input type="text" id="search-input" placeholder="Search by Username ID..." onkeyup="handleSearch()">
                 <div id="search-results"></div>
             </div>
-            <!-- My Profile -->
             <div id="tab-profile" class="hidden" style="padding:20px; text-align:center;">
                 <div class="emoji-picker" id="my-profile-emoji" onclick="editProfileEmoji()"></div>
                 <h3 id="profile-name-display" style="color:white; margin-bottom:10px; display:flex; justify-content:center; align-items:center;"></h3>
@@ -339,13 +322,11 @@
                 <input type="text" id="edit-username" placeholder="Username" readonly style="opacity: 0.7;">
                 <button class="btn-primary" onclick="updateProfile()">Update Profile</button>
             </div>
-            <!-- Blocked -->
             <div id="tab-blocked" class="hidden" style="padding:15px;">
                 <h3 style="color:white; margin-bottom:15px;">Blocked Users</h3>
                 <div id="blocked-list-container"></div>
                 <button class="btn-outline" onclick="switchTab('chats')">Back to Chats</button>
             </div>
-            <!-- ADMIN PANEL TAB CONTENT -->
             <div id="tab-admin" class="hidden" style="padding:15px;">
                 <h3 style="color:var(--admin-color); margin-bottom:15px;">Admin Dashboard</h3>
                 <div id="admin-user-list"></div>
@@ -356,7 +337,6 @@
             <div class="nav-item active" onclick="switchTab('chats')" id="nav-chats"><i class="fas fa-comment-alt"></i> Chats</div>
             <div class="nav-item" onclick="switchTab('search')" id="nav-search"><i class="fas fa-search"></i> Search</div>
             <div class="nav-item" onclick="switchTab('profile')" id="nav-profile"><i class="fas fa-user"></i> Profile</div>
-            <!-- ADMIN TAB ICON (HIDDEN BY DEFAULT) -->
             <div class="nav-item hidden" onclick="switchTab('admin')" id="nav-admin"><i class="fas fa-shield-alt"></i> Admin</div>
         </div>
     </div>
@@ -384,9 +364,17 @@
 
         <div class="chat-input-area" id="chat-input-area">
             <input type="file" id="media-input" style="display:none;" accept="image/*,video/*" onchange="handleFileSelect(this)">
+            
             <i class="fas fa-paperclip chat-action-btn" onclick="document.getElementById('media-input').click()"></i>
+            
+            <!-- LOADING INDICATOR -->
+            <div id="media-loader" class="media-loader"></div>
+            
             <input type="text" class="chat-input" id="message-input" placeholder="Message...">
-            <i class="fas fa-microphone chat-action-btn" id="mic-btn" onmousedown="startRecording()" onmouseup="stopRecording()" ontouchstart="startRecording()" ontouchend="stopRecording()"></i>
+            
+            <!-- MIC BUTTON WITH HOLD LOGIC -->
+            <i class="fas fa-microphone chat-action-btn" id="mic-btn"></i>
+            
             <i class="fas fa-paper-plane chat-action-btn" onclick="sendTextMessage()"></i>
         </div>
         <div id="blocked-msg-bar" style="background:#222; color:red; text-align:center; padding:10px; display:none; font-size:0.8rem;">
@@ -440,6 +428,8 @@
         let currentEmojiIdx = 0;
         let mediaRecorder;
         let audioChunks = [];
+        let isRecording = false;
+        let micPressStartTime = 0;
         
         const ADMIN_EMAIL = "thepremanshu@gmail.com";
         const ADMIN_PASS_REQ = "werttyy";
@@ -455,13 +445,11 @@
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
-                // Check Admin - Show/Hide Tab
                 if(user.email === ADMIN_EMAIL) {
                     document.getElementById('nav-admin').classList.remove('hidden');
                 } else {
                     document.getElementById('nav-admin').classList.add('hidden');
                 }
-
                 get(child(ref(db), `users/${user.uid}`)).then((snapshot) => {
                     if (snapshot.exists()) {
                         document.getElementById('get-started-btn').innerText = "BACK TO CHAT AREA";
@@ -491,16 +479,8 @@
         window.login = () => {
             const email = document.getElementById('login-email').value.trim();
             const pass = document.getElementById('login-pass').value.trim();
-            
-            // Hardcoded Admin Security Check
-            if (email === ADMIN_EMAIL && pass !== ADMIN_PASS_REQ) {
-                showToast("Invalid Credentials for this account");
-                return;
-            }
-
-            signInWithEmailAndPassword(auth, email, pass)
-            .then(() => showScreen('main-app-screen'))
-            .catch(e => showToast(e.message));
+            if (email === ADMIN_EMAIL && pass !== ADMIN_PASS_REQ) return showToast("Invalid Credentials");
+            signInWithEmailAndPassword(auth, email, pass).then(() => showScreen('main-app-screen')).catch(e => showToast(e.message));
         };
 
         window.signup = () => {
@@ -515,7 +495,7 @@
                     showScreen('home-screen');
                     showToast("Logged out");
                     sessionStorage.removeItem('visited');
-                    location.reload(); // Reload to clear admin state completely
+                    location.reload(); 
                 });
             });
         };
@@ -558,11 +538,10 @@
             });
         };
 
-        // --- ADMIN PANEL TAB LOGIC ---
+        // --- ADMIN ---
         function loadAdminList() {
             const list = document.getElementById('admin-user-list');
             list.innerHTML = "Loading users...";
-
             onValue(ref(db, 'users'), (snapshot) => {
                 list.innerHTML = "";
                 if(snapshot.exists()) {
@@ -574,14 +553,10 @@
                         const badge = u.isVerified ? tickHTML : '';
                         const btnText = u.isVerified ? 'Unverify' : 'Verify';
                         const btnClass = u.isVerified ? 'btn-outline' : 'btn-primary';
-                        
                         div.innerHTML = `
                             <div class="admin-user-info">
                                 <div class="avatar" style="width:40px;height:40px;font-size:1.2rem;">${u.emoji}</div>
-                                <div>
-                                    <div style="font-weight:bold; display:flex; align-items:center;">${u.name} ${badge}</div>
-                                    <div style="font-size:0.8rem;color:gray;">@${u.username}</div>
-                                </div>
+                                <div><div style="font-weight:bold; display:flex; align-items:center;">${u.name} ${badge}</div><div style="font-size:0.8rem;color:gray;">@${u.username}</div></div>
                             </div>
                             <div class="admin-actions">
                                 <button class="${btnClass}" style="width:auto; padding:5px 15px; font-size:0.8rem; margin:0;" onclick="toggleUserVerify('${uid}', ${u.isVerified})">${btnText}</button>
@@ -590,25 +565,17 @@
                         `;
                         list.appendChild(div);
                     });
-                } else {
-                    list.innerHTML = "No users found.";
-                }
+                } else list.innerHTML = "No users found.";
             });
         }
-
-        window.toggleUserVerify = (uid, currentStatus) => {
-            update(ref(db, `users/${uid}`), { isVerified: !currentStatus });
-        };
-
+        window.toggleUserVerify = (uid, currentStatus) => update(ref(db, `users/${uid}`), { isVerified: !currentStatus });
         window.deleteUserAccount = (uid, username) => {
-            confirmAction("Delete Account", "Permanently remove this user?", () => {
+            confirmAction("Delete Account", "Permanently remove?", () => {
                 const updates = {};
                 updates[`users/${uid}`] = null;
                 updates[`usernames/${username}`] = null;
                 updates[`userChats/${uid}`] = null;
-                update(ref(db), updates).then(() => {
-                    showToast("User Deleted");
-                });
+                update(ref(db), updates).then(() => showToast("User Deleted"));
             });
         };
 
@@ -616,11 +583,9 @@
         window.showScreen = (screenId) => {
             document.getElementById('chat-room').classList.add('hidden');
             document.getElementById('profile-preview').classList.add('hidden');
-            
             document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
             document.getElementById(screenId).classList.remove('hidden');
             document.getElementById('main-menu').classList.remove('show');
-            
             if (screenId === 'main-app-screen') {
                 switchTab('chats');
                 get(child(ref(db), `users/${currentUser.uid}`)).then(s => {
@@ -642,23 +607,20 @@
                 if(el) el.classList.add('hidden');
                 if(document.getElementById(`nav-${t}`)) document.getElementById(`nav-${t}`).classList.remove('active', 'admin-active');
             });
-            
             const target = document.getElementById(`tab-${tab}`);
             if(target) target.classList.remove('hidden');
-            
             const nav = document.getElementById(`nav-${tab}`);
             if(nav) {
                 if(tab === 'admin') nav.classList.add('admin-active');
                 else nav.classList.add('active');
             }
-            
             if (tab === 'chats') loadChats();
             if (tab === 'admin') loadAdminList();
         };
 
         window.toggleMainMenu = () => document.getElementById('main-menu').classList.toggle('show');
 
-        // --- SEARCH ---
+        // --- SEARCH & CHAT ---
         window.handleSearch = () => {
             const query = document.getElementById('search-input').value.trim();
             if (query.length < 1) { document.getElementById('search-results').innerHTML = ""; return; }
@@ -671,32 +633,22 @@
                     get(child(ref(db), `users/${uid}`)).then((userSnap) => {
                         const user = userSnap.val();
                         const badge = user.isVerified ? tickHTML : '';
-                        resDiv.innerHTML = `
-                            <div class="user-list-item" onclick="openChat('${uid}')">
-                                <div class="avatar">${user.emoji}</div>
-                                <div class="user-info"><div class="user-name">${user.name} ${badge}</div><div class="user-meta">@${user.username}</div></div>
-                                <button class="btn-primary" style="width:auto; padding:5px 15px; font-size:0.8rem;">Chat</button>
-                            </div>`;
+                        resDiv.innerHTML = `<div class="user-list-item" onclick="openChat('${uid}')"><div class="avatar">${user.emoji}</div><div class="user-info"><div class="user-name">${user.name} ${badge}</div><div class="user-meta">@${user.username}</div></div><button class="btn-primary" style="width:auto; padding:5px 15px; font-size:0.8rem;">Chat</button></div>`;
                     });
                 } else resDiv.innerHTML = "<p style='color:grey; text-align:center; margin-top:10px'>No user found</p>";
             });
         };
 
-        // --- CHAT LOGIC ---
         window.openChat = async (targetUid) => {
             const snap = await get(child(ref(db), `users/${targetUid}`));
             if(!snap.exists()) return showToast("User no longer exists");
-            
             currentChatUser = { ...snap.val(), uid: targetUid };
             currentChatId = currentUser.uid < targetUid ? `${currentUser.uid}_${targetUid}` : `${targetUid}_${currentUser.uid}`;
-            
             const badge = currentChatUser.isVerified ? tickHTML : '';
             document.getElementById('chat-header-name').innerHTML = currentChatUser.name + badge;
             document.getElementById('chat-header-emoji').innerText = currentChatUser.emoji;
             document.getElementById('messages-list').innerHTML = "";
-            
             document.getElementById('chat-room').classList.remove('hidden');
-            
             checkBlockStatus(targetUid);
             onValue(ref(db, `chats/${currentChatId}/messages`), (snapshot) => {
                 const list = document.getElementById('messages-list');
@@ -707,12 +659,7 @@
                 }
             });
         };
-
-        window.closeChat = () => {
-            document.getElementById('chat-room').classList.add('hidden');
-            currentChatId = null;
-            loadChats();
-        };
+        window.closeChat = () => { document.getElementById('chat-room').classList.add('hidden'); currentChatId = null; loadChats(); };
 
         function checkBlockStatus(otherUid) {
             get(child(ref(db), `blocked/${otherUid}/${currentUser.uid}`)).then(s => {
@@ -725,7 +672,6 @@
                 }
             });
         }
-
         function renderMessage(msg, key) {
             const isMe = msg.sender === currentUser.uid;
             const div = document.createElement('div');
@@ -734,18 +680,15 @@
             if (msg.type === 'image') content = `<div class="msg-media"><img src="${msg.content}"></div>`;
             else if (msg.type === 'video') content = `<div class="msg-media"><video controls src="${msg.content}"></video></div>`;
             else if (msg.type === 'audio') content = `<audio controls src="${msg.content}"></audio>`;
-            
             div.innerHTML = `${content}<span class="msg-time">${new Date(msg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span><div class="msg-delete" onclick="deleteMessage('${key}')"><i class="fas fa-trash"></i></div>`;
             document.getElementById('messages-list').appendChild(div);
         }
-
         window.sendTextMessage = () => {
             const text = document.getElementById('message-input').value.trim();
             if(!text) return;
             pushMessage('text', text);
             document.getElementById('message-input').value = "";
         };
-
         function pushMessage(type, content) {
             get(child(ref(db), `blocked/${currentChatUser.uid}/${currentUser.uid}`)).then(s => {
                 if(s.exists()) return showToast("You are blocked");
@@ -756,34 +699,112 @@
                 update(ref(db, `userChats/${currentChatUser.uid}/${currentChatId}`), { ...meta, with: currentUser.uid });
             });
         }
+        window.deleteMessage = (key) => confirmAction("Delete", "Delete message?", () => remove(ref(db, `chats/${currentChatId}/messages/${key}`)));
 
-        window.deleteMessage = (key) => {
-            confirmAction("Delete", "Delete message?", () => remove(ref(db, `chats/${currentChatId}/messages/${key}`)));
-        };
+        // --- MEDIA & LOADING LOGIC ---
+        function showLoader() { document.getElementById('media-loader').style.display = 'block'; }
+        function hideLoader() { document.getElementById('media-loader').style.display = 'none'; }
+
+        // Wrapper to enforce 30s timeout
+        function uploadWithTimeout(storageRef, file) {
+            return new Promise((resolve, reject) => {
+                const uploadTask = uploadBytes(storageRef, file);
+                const timer = setTimeout(() => {
+                    // We can't cancel a generic promise easily here without more code,
+                    // but we can reject the flow so UI updates.
+                    reject(new Error("Timeout")); 
+                }, 30000); 
+
+                uploadTask.then((snapshot) => {
+                    clearTimeout(timer);
+                    resolve(snapshot);
+                }).catch((err) => {
+                    clearTimeout(timer);
+                    reject(err);
+                });
+            });
+        }
 
         window.handleFileSelect = (input) => {
             const file = input.files[0];
             if (!file) return;
             const type = file.type.startsWith('image') ? 'image' : 'video';
-            showToast("Uploading...");
-            uploadBytes(sRef(storage, `chat/${Date.now()}_${file.name}`), file).then(s => getDownloadURL(s.ref).then(url => {
-                pushMessage(type, url); showToast("Sent");
-            }));
+            
+            showLoader();
+            
+            const fileRef = sRef(storage, `chat/${Date.now()}_${file.name}`);
+            
+            uploadWithTimeout(fileRef, file)
+                .then(snapshot => getDownloadURL(snapshot.ref))
+                .then(url => {
+                    pushMessage(type, url);
+                    hideLoader();
+                    showToast("Sent successfully");
+                })
+                .catch(err => {
+                    hideLoader();
+                    if(err.message === "Timeout") showToast("Failed: Network too slow (30s limit)");
+                    else showToast("Upload Failed");
+                });
         };
 
-        window.startRecording = () => {
+        // --- VOICE RECORDER LOGIC (HOLD TO RECORD) ---
+        const micBtn = document.getElementById('mic-btn');
+
+        const startMic = (e) => {
+            if(e.cancelable) e.preventDefault(); 
+            micPressStartTime = Date.now();
+            isRecording = true;
+            micBtn.classList.add('recording-active');
+            
             navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
                 mediaRecorder = new MediaRecorder(stream);
-                mediaRecorder.start();
                 audioChunks = [];
-                showToast("Recording...");
+                mediaRecorder.start();
                 mediaRecorder.addEventListener("dataavailable", e => audioChunks.push(e.data));
-                mediaRecorder.addEventListener("stop", () => {
-                    uploadBytes(sRef(storage, `voice/${Date.now()}.mp3`), new Blob(audioChunks)).then(s => getDownloadURL(s.ref).then(url => pushMessage('audio', url)));
-                });
             });
         };
-        window.stopRecording = () => { if(mediaRecorder) { mediaRecorder.stop(); showToast("Sending..."); } };
+
+        const stopMic = (e) => {
+            if(!isRecording) return;
+            isRecording = false;
+            micBtn.classList.remove('recording-active');
+            
+            const duration = Date.now() - micPressStartTime;
+            
+            if (duration < 600) { // Short tap check
+                if(mediaRecorder) mediaRecorder.stop();
+                showToast("Hold microphone to record");
+                return;
+            }
+
+            // Normal Recording
+            if(mediaRecorder) {
+                mediaRecorder.addEventListener("stop", () => {
+                    showLoader();
+                    const blob = new Blob(audioChunks, { type: 'audio/mp3' });
+                    const fileRef = sRef(storage, `voice/${Date.now()}.mp3`);
+                    
+                    uploadWithTimeout(fileRef, blob)
+                        .then(snapshot => getDownloadURL(snapshot.ref))
+                        .then(url => {
+                            pushMessage('audio', url);
+                            hideLoader();
+                        })
+                        .catch(err => {
+                            hideLoader();
+                            showToast("Voice Send Failed");
+                        });
+                });
+                mediaRecorder.stop();
+            }
+        };
+
+        // Attach listeners for both Touch and Mouse
+        micBtn.addEventListener('mousedown', startMic);
+        micBtn.addEventListener('mouseup', stopMic);
+        micBtn.addEventListener('touchstart', startMic);
+        micBtn.addEventListener('touchend', stopMic);
 
         function loadChats() {
             const listDiv = document.getElementById('chat-list-container');
@@ -806,58 +827,15 @@
                 });
             });
         }
-
-        window.deleteEntireChat = (id, e) => {
-            if(e) e.stopPropagation();
-            confirmAction("Delete", "Remove chat?", () => remove(ref(db, `userChats/${currentUser.uid}/${id}`)));
-        }
-
-        window.blockCurrentUser = () => {
-            confirmAction("Block", `Block ${currentChatUser.name}?`, () => {
-                set(ref(db, `blocked/${currentUser.uid}/${currentChatUser.uid}`), true).then(() => { showToast("Blocked"); closeChat(); });
-            });
-        };
-
-        window.showBlockedList = () => {
-            switchTab('blocked');
-            document.getElementById('main-menu').classList.remove('show');
-            get(child(ref(db), `blocked/${currentUser.uid}`)).then(snap => {
-                const cont = document.getElementById('blocked-list-container');
-                cont.innerHTML = "";
-                if(!snap.exists()) cont.innerHTML = "No blocked users";
-                snap.forEach(b => {
-                    get(child(ref(db), `users/${b.key}`)).then(u => {
-                        const div = document.createElement('div');
-                        div.className = 'user-list-item';
-                        div.innerHTML = `<div class="user-name">${u.val().name}</div><button class="btn-outline" style="width:auto;" onclick="unblock('${b.key}')">Unblock</button>`;
-                        cont.appendChild(div);
-                    });
-                });
-            });
-        };
-
+        window.deleteEntireChat = (id, e) => { if(e) e.stopPropagation(); confirmAction("Delete", "Remove chat?", () => remove(ref(db, `userChats/${currentUser.uid}/${id}`))); }
+        window.blockCurrentUser = () => confirmAction("Block", `Block ${currentChatUser.name}?`, () => set(ref(db, `blocked/${currentUser.uid}/${currentChatUser.uid}`), true).then(() => { showToast("Blocked"); closeChat(); }));
+        window.showBlockedList = () => { switchTab('blocked'); document.getElementById('main-menu').classList.remove('show'); get(child(ref(db), `blocked/${currentUser.uid}`)).then(snap => { const cont = document.getElementById('blocked-list-container'); cont.innerHTML = ""; if(!snap.exists()) cont.innerHTML = "No blocked users"; snap.forEach(b => { get(child(ref(db), `users/${b.key}`)).then(u => { const div = document.createElement('div'); div.className = 'user-list-item'; div.innerHTML = `<div class="user-name">${u.val().name}</div><button class="btn-outline" style="width:auto;" onclick="unblock('${b.key}')">Unblock</button>`; cont.appendChild(div); }); }); }); };
         window.unblock = (uid) => remove(ref(db, `blocked/${currentUser.uid}/${uid}`)).then(() => showBlockedList());
-
-        // --- View Profile Logic (Full Screen) ---
-        window.viewChatProfile = () => {
-            const p = document.getElementById('profile-preview');
-            p.classList.remove('hidden');
-            const badge = currentChatUser.isVerified ? tickHTML.replace('18px', '24px').replace('9px','12px') : '';
-            document.getElementById('preview-emoji').innerText = currentChatUser.emoji;
-            document.getElementById('preview-name').innerHTML = currentChatUser.name + badge;
-            document.getElementById('preview-username').innerText = "@" + currentChatUser.username;
-        };
-
-        window.closeProfilePreview = () => {
-            document.getElementById('profile-preview').classList.add('hidden');
-        };
-
-        // --- Common ---
+        window.viewChatProfile = () => { const p = document.getElementById('profile-preview'); p.classList.remove('hidden'); const badge = currentChatUser.isVerified ? tickHTML.replace('18px', '24px').replace('9px','12px') : ''; document.getElementById('preview-emoji').innerText = currentChatUser.emoji; document.getElementById('preview-name').innerHTML = currentChatUser.name + badge; document.getElementById('preview-username').innerText = "@" + currentChatUser.username; };
+        window.closeProfilePreview = () => document.getElementById('profile-preview').classList.add('hidden');
         window.toggleChatMenu = () => document.getElementById('chat-menu').classList.toggle('show');
         window.showToast = (msg) => { const t=document.getElementById('toast'); t.innerText=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); };
-        
-        let confirmCb = null;
-        window.confirmAction = (t, m, cb) => { document.getElementById('confirm-title').innerText=t; document.getElementById('confirm-msg').innerText=m; document.getElementById('confirm-modal').style.display='flex'; confirmCb=cb; };
+        let confirmCb = null; window.confirmAction = (t, m, cb) => { document.getElementById('confirm-title').innerText=t; document.getElementById('confirm-msg').innerText=m; document.getElementById('confirm-modal').style.display='flex'; confirmCb=cb; };
         document.getElementById('confirm-yes-btn').onclick = () => { if(confirmCb) confirmCb(); closeConfirm(); };
         window.closeConfirm = () => { document.getElementById('confirm-modal').style.display='none'; confirmCb=null; };
     </script>
