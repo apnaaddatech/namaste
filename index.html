@@ -62,6 +62,20 @@
         }
         input:focus { border-color: var(--primary); }
 
+        /* Google Button Styles */
+        .auth-separator { margin: 20px 0; text-align: center; position: relative; }
+        .auth-separator::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: #333; z-index: 1; }
+        .auth-separator span { background: #000; padding: 0 10px; position: relative; z-index: 2; color: #777; font-size: 0.8rem; }
+        
+        .google-btn {
+            width: 100%; padding: 12px; background: white; color: black; border: none; 
+            border-radius: 30px; font-weight: bold; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            transition: 0.3s; margin-top: 10px;
+        }
+        .google-btn:active { transform: scale(0.98); background: #f0f0f0; }
+        .google-btn i { font-size: 1.1rem; }
+
         /* Blue Tick & Message Status */
         .verified-badge {
             display: inline-flex; align-items: center; justify-content: center; position: relative;
@@ -277,6 +291,13 @@
                     <button class="btn-outline" onclick="toggleAuthMode()">Back to Login</button>
                 </div>
             </div>
+
+            <!-- NEW GOOGLE LOGIN BUTTON -->
+            <div class="auth-separator"><span>OR</span></div>
+            <button class="google-btn" onclick="handleGoogleLogin()">
+                <i class="fab fa-google"></i> Continue with Google
+            </button>
+
             <button class="btn-outline" style="border:none; margin-top: 20px; color: #666;" onclick="showScreen('home-screen')">Back Home</button>
         </div>
     </div>
@@ -391,7 +412,8 @@
     <!-- FIREBASE & LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        // ADDED GoogleAuthProvider and signInWithPopup
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getDatabase, ref, set, get, child, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
@@ -407,6 +429,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
+        const googleProvider = new GoogleAuthProvider(); // Initialize Google Provider
 
         let currentUser = null;
         let currentChatId = null;
@@ -470,6 +493,18 @@
             const email = document.getElementById('signup-email').value;
             const pass = document.getElementById('signup-pass').value;
             createUserWithEmailAndPassword(auth, email, pass).then(() => showScreen('setup-screen')).catch(e => showToast(e.message));
+        };
+
+        // NEW: GOOGLE LOGIN FUNCTION
+        window.handleGoogleLogin = async () => {
+            try {
+                // The onAuthStateChanged listener handles routing (Main App vs Setup)
+                // depending on if the user profile already exists.
+                await signInWithPopup(auth, googleProvider);
+            } catch (error) {
+                console.error("Google Login Error:", error);
+                showToast(error.message);
+            }
         };
 
         window.logout = () => {
@@ -744,4 +779,4 @@
         window.closeConfirm = () => { document.getElementById('confirm-modal').style.display='none'; confirmCb=null; };
     </script>
 </body>
-</html>
+    </html>
